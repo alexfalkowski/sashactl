@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 
-	"github.com/alexfalkowski/go-client-template/internal/cmd"
 	sc "github.com/alexfalkowski/go-service/cmd"
 	"github.com/alexfalkowski/go-service/env"
+	"github.com/alexfalkowski/sashactl/internal/cmd"
 )
 
 func main() {

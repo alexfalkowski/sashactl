@@ -4,7 +4,7 @@ require 'securerandom'
 require 'yaml'
 require 'base64'
 
-module Example
+module Sashactl
   class << self
     def client_config
       @client_config ||= Nonnative.configurations('.config/client.yml')

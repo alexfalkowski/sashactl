@@ -1,7 +1,7 @@
-[![CircleCI](https://circleci.com/gh/alexfalkowski/go-client-template.svg?style=svg)](https://circleci.com/gh/alexfalkowski/go-client-template)
-[![codecov](https://codecov.io/gh/alexfalkowski/go-client-template/graph/badge.svg?token=QSRFU8VNST)](https://codecov.io/gh/alexfalkowski/go-client-template)
-[![Go Report Card](https://goreportcard.com/badge/github.com/alexfalkowski/go-client-template)](https://goreportcard.com/report/github.com/alexfalkowski/go-client-template)
-[![Go Reference](https://pkg.go.dev/badge/github.com/alexfalkowski/go-client-template.svg)](https://pkg.go.dev/github.com/alexfalkowski/go-client-template)
+[![CircleCI](https://circleci.com/gh/alexfalkowski/sashactl.svg?style=svg)](https://circleci.com/gh/alexfalkowski/sashactl)
+[![codecov](https://codecov.io/gh/alexfalkowski/sashactl/graph/badge.svg?token=QSRFU8VNST)](https://codecov.io/gh/alexfalkowski/sashactl)
+[![Go Report Card](https://goreportcard.com/badge/github.com/alexfalkowski/sashactl)](https://goreportcard.com/report/github.com/alexfalkowski/sashactl)
+[![Go Reference](https://pkg.go.dev/badge/github.com/alexfalkowski/sashactl.svg)](https://pkg.go.dev/github.com/alexfalkowski/sashactl)
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 
 

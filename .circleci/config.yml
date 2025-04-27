@@ -4,7 +4,7 @@ jobs:
   build-client:
     docker:
       - image: alexfalkowski/go:2.13
-    working_directory: ~/go-client-template
+    working_directory: ~/sashactl
     steps:
       - checkout
       - run: git submodule sync
@@ -12,30 +12,30 @@ jobs:
       - restore_cache:
           name: restore go deps
           keys:
-            - go-client-template-go-cache-{{ checksum "go.sum" }}
-            - go-client-template-go-cache-
+            - sashactl-go-cache-{{ checksum "go.sum" }}
+            - sashactl-go-cache-
       - restore_cache:
           name: restore ruby deps
           keys:
-            - go-client-template-ruby-cache-{{ checksum "test/Gemfile.lock" }}
-            - go-client-template-ruby-cache-
+            - sashactl-ruby-cache-{{ checksum "test/Gemfile.lock" }}
+            - sashactl-ruby-cache-
       - run: make clean
       - run: make dep
       - save_cache:
           name: save go deps
-          key: go-client-template-go-cache-{{ checksum "go.sum" }}
+          key: sashactl-go-cache-{{ checksum "go.sum" }}
           paths:
             - /home/circleci/go/pkg/mod
       - save_cache:
           name: save ruby deps
-          key: go-client-template-ruby-cache-{{ checksum "test/Gemfile.lock" }}
+          key: sashactl-ruby-cache-{{ checksum "test/Gemfile.lock" }}
           paths:
             - test/vendor
       - restore_cache:
           name: restore go build cache
           keys:
-            - go-client-template-go-build-cache-{{ checksum "go.sum" }}
-            - go-client-template-go-build-cache-
+            - sashactl-go-build-cache-{{ checksum "go.sum" }}
+            - sashactl-go-build-cache-
       - run: make clean
       - run: make lint
       - run: make sec
@@ -43,7 +43,7 @@ jobs:
       - run: make build analyse
       - save_cache:
           name: save go build cache
-          key: go-client-template-go-build-cache-{{ checksum "go.sum" }}
+          key: sashactl-go-build-cache-{{ checksum "go.sum" }}
           paths:
             - /home/circleci/.cache/go-build
       - run: make coverage
@@ -56,7 +56,7 @@ jobs:
   build-docker:
     docker:
       - image: alexfalkowski/go:2.13
-    working_directory: ~/go-client-template
+    working_directory: ~/sashactl
     steps:
       - checkout
       - run: git submodule sync
@@ -69,7 +69,7 @@ jobs:
   release:
     docker:
       - image: alexfalkowski/release:3.15
-    working_directory: ~/go-client-template
+    working_directory: ~/sashactl
     steps:
       - checkout
       - run: git submodule sync
@@ -80,7 +80,7 @@ jobs:
   push-docker:
     docker:
       - image: alexfalkowski/go:2.13
-    working_directory: ~/go-client-template
+    working_directory: ~/sashactl
     steps:
       - checkout
       - run: git submodule sync
@@ -95,7 +95,7 @@ jobs:
     resource_class: large
 
 workflows:
-  go-client-template:
+  sashactl:
     jobs:
       - build-client
       - build-docker:
