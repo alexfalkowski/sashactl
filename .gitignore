@@ -3,4 +3,4 @@ vendor
 *.prof
 *.cov
 *.out
-/go-client-template
+/sashactl

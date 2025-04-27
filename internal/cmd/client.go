@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/alexfalkowski/go-client-template/internal/cmd/client"
-	"github.com/alexfalkowski/go-client-template/internal/config"
 	"github.com/alexfalkowski/go-service/cmd"
 	"github.com/alexfalkowski/go-service/feature"
 	"github.com/alexfalkowski/go-service/module"
 	"github.com/alexfalkowski/go-service/telemetry"
+	"github.com/alexfalkowski/sashactl/internal/cmd/client"
+	"github.com/alexfalkowski/sashactl/internal/config"
 )
 
 // RegisterClient for cmd.

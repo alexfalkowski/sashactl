@@ -1,4 +1,4 @@
-module github.com/alexfalkowski/go-client-template
+module github.com/alexfalkowski/sashactl
 
 go 1.24.0
 
