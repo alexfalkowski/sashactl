@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "feat"
+      prefix-development: "fix"
+      include: "scope"
+  - package-ecosystem: "bundler"
+    directory: "/test"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "test"
+      prefix-development: "test"
+      include: "scope"
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "feat"
+      prefix-development: "build"
+      include: "scope"
+    allow:
+      - dependency-name: "bin"

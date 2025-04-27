@@ -1,0 +1,6 @@
+.bundle
+vendor
+*.prof
+*.cov
+*.out
+/go-client-template
