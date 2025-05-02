@@ -4,4 +4,7 @@ Nonnative.configure do |config|
   config.load_file('nonnative.yml')
 end
 
-require 'nonnative/startup'
+After('@clear_pool') do
+  Nonnative.stop
+  Nonnative.clear_pool
+end

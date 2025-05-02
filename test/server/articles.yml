@@ -1,0 +1,7 @@
+articles:
+  -
+    name: "article 1"
+    slug: "article-1"
+  -
+    name: "article 2"
+    slug: "article-2"
