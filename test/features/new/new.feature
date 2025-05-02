@@ -16,7 +16,7 @@ Feature: New article
     When we create an article with name "new article"
     Then it should not run successfully
     And I should not have an article named "new article"
-    And I should see a log entry of "Not Found" in the file "reports/new.log"
+    And I should see a log entry of "not found" in the file "reports/new.log"
 
   @erroneous
   Scenario: Unsuccessfully create an article with a name as the config is broken
@@ -24,7 +24,7 @@ Feature: New article
     When we create an article with name "new article"
     Then it should not run successfully
     And I should not have an article named "new article"
-    And I should see a log entry of "Internal Server Error" in the file "reports/new.log"
+    And I should see a log entry of "internal server error" in the file "reports/new.log"
 
   @operational
   Scenario: Unsuccessfully create an article with a name as the config is down
