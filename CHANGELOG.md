@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v0.9.0](https://github.com/alexfalkowski/sashactl/releases/tag/v0.9.0) - 2025-05-02
+
+- [`a7b9754`](https://github.com/alexfalkowski/sashactl/commit/a7b975423d472ed458e2ed6993a3dea68c018955) feat(article): add ability to create articles (#12)
+
 ## [v0.8.0](https://github.com/alexfalkowski/sashactl/releases/tag/v0.8.0) - 2025-05-01
 
 - [`50c7ad3`](https://github.com/alexfalkowski/sashactl/commit/50c7ad3de9b36902ff3f1305c524ea1b1fae3fa4) feat(deps): upgraded github.com/alexfalkowski/go-service to v1.569.0 (#11)
