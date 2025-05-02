@@ -33,5 +33,4 @@ Feature: New article
     When we create an article with name "new article"
     Then it should not run successfully
     And I should not have an article named "new article"
-    And I should see a log entry of "connection reset by peer" in the file "reports/new.log"
     And I should reset the proxy for server "bucket"

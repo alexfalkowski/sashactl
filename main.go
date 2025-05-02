@@ -3,19 +3,21 @@ package main
 import (
 	"context"
 
-	sc "github.com/alexfalkowski/go-service/cmd"
+	"github.com/alexfalkowski/go-service/cmd"
 	"github.com/alexfalkowski/go-service/env"
-	"github.com/alexfalkowski/sashactl/internal/cmd"
+	"github.com/alexfalkowski/sashactl/internal/cmd/new"
+	"github.com/alexfalkowski/sashactl/internal/cmd/publish"
 )
 
 func main() {
 	command().ExitOnError(context.Background())
 }
 
-func command() *sc.Command {
-	command := sc.New(env.NewName(), env.NewVersion())
+func command() *cmd.Command {
+	command := cmd.New(env.NewName(), env.NewVersion())
 
-	cmd.RegisterClient(command)
+	new.Register(command)
+	publish.Register(command)
 
 	return command
 }

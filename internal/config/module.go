@@ -11,4 +11,5 @@ var Module = fx.Options(
 	config.Module,
 	fx.Decorate(decorateConfig),
 	fx.Provide(articlesConfig),
+	fx.Provide(awsConfig),
 )
