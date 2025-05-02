@@ -1,9 +1,5 @@
-/.bundle/
-/.yardoc
-/_yardoc/
-/coverage/
-/doc/
-/
+.bundle
+reports/articles
 *.html
 *.log
 *.xml

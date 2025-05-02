@@ -1,3 +1,11 @@
+articles:
+  address: http://localhost:5678
+  path: reports
+  retry:
+    attempts: 3
+    backoff: 100ms
+    timeout: 10s
+  timeout: 5s
 environment: development
 id:
   kind: uuid
