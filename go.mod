@@ -3,7 +3,7 @@ module github.com/alexfalkowski/sashactl
 go 1.24.0
 
 require (
-	github.com/alexfalkowski/go-service v1.570.1
+	github.com/alexfalkowski/go-service v1.570.2
 	github.com/gosimple/slug v1.15.0
 	go.uber.org/fx v1.23.0
 )
