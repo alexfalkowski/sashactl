@@ -1,5 +1,5 @@
 .bundle
-reports/articles/new-article
+reports/new/articles
 *.html
 *.log
 *.xml

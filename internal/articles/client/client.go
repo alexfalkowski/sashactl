@@ -12,6 +12,7 @@ import (
 	"github.com/alexfalkowski/go-service/telemetry/tracer"
 	th "github.com/alexfalkowski/go-service/transport/http"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
+	"github.com/alexfalkowski/sashactl/internal/content"
 	"go.uber.org/fx"
 )
 
@@ -50,7 +51,7 @@ type Client struct {
 // Get the url and respond with res.
 func (c *Client) Get(ctx context.Context, url string, res any) error {
 	opts := &rest.Options{
-		ContentType: "application/yaml",
+		ContentType: content.YAMLContentType,
 		Response:    res,
 	}
 
