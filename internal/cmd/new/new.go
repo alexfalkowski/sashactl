@@ -2,19 +2,24 @@ package new
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/alexfalkowski/go-service/cmd"
 	"github.com/alexfalkowski/go-service/encoding/yaml"
-	"github.com/alexfalkowski/go-service/errors"
+	se "github.com/alexfalkowski/go-service/errors"
 	"github.com/alexfalkowski/go-service/feature"
 	"github.com/alexfalkowski/go-service/module"
+	"github.com/alexfalkowski/go-service/strings"
 	"github.com/alexfalkowski/go-service/telemetry"
 	"github.com/alexfalkowski/go-service/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/config"
 	"go.uber.org/fx"
 )
+
+// ErrNoName when we forget to pass a name.
+var ErrNoName = errors.New("new: no name provided")
 
 // Register for new.
 func Register(command *cmd.Command) {
@@ -42,9 +47,12 @@ type Params struct {
 func New(params Params) {
 	cmd.Start(params.Lifecycle, func(ctx context.Context) error {
 		name, _ := params.FlagSet.GetString("name")
+		if strings.IsEmpty(name) {
+			return ErrNoName
+		}
 
 		if err := params.Repository.NewArticle(ctx, name); err != nil {
-			return errors.Prefix("new: create article", err)
+			return se.Prefix("new: create article", err)
 		}
 
 		params.Logger.Info("created article", slog.String("name", name))

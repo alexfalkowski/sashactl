@@ -2,19 +2,24 @@ package publish
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/alexfalkowski/go-service/cmd"
 	"github.com/alexfalkowski/go-service/encoding/yaml"
-	"github.com/alexfalkowski/go-service/errors"
+	se "github.com/alexfalkowski/go-service/errors"
 	"github.com/alexfalkowski/go-service/feature"
 	"github.com/alexfalkowski/go-service/module"
+	"github.com/alexfalkowski/go-service/strings"
 	"github.com/alexfalkowski/go-service/telemetry"
 	"github.com/alexfalkowski/go-service/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/config"
 	"go.uber.org/fx"
 )
+
+// ErrNoSlug when we forget to pass a slug.
+var ErrNoSlug = errors.New("publish: no slug provided")
 
 // Register for publish.
 func Register(command *cmd.Command) {
@@ -42,9 +47,12 @@ type Params struct {
 func Publish(params Params) {
 	cmd.Start(params.Lifecycle, func(ctx context.Context) error {
 		slug, _ := params.FlagSet.GetString("slug")
+		if strings.IsEmpty(slug) {
+			return ErrNoSlug
+		}
 
 		if err := params.Repository.PublishArticle(ctx, slug); err != nil {
-			return errors.Prefix("publish: existing article", err)
+			return se.Prefix("publish: existing article", err)
 		}
 
 		params.Logger.Info("published article", slog.String("slug", slug))

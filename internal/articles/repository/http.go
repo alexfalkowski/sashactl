@@ -20,11 +20,6 @@ import (
 	"github.com/gosimple/slug"
 )
 
-const (
-	noBody        = ""
-	noContentType = ""
-)
-
 var bucket = aws.String("sasha-cms")
 
 // NewRepository for books.
@@ -92,7 +87,7 @@ func (r *HTTPRepository) PublishArticle(ctx context.Context, slug string) error 
 	articlesPath := filepath.Join(r.config.Path, "articles")
 	articlesConfig := filepath.Join(articlesPath, "articles.yml")
 
-	if err := r.uploadConfig(ctx, slug, articlesConfig); err != nil {
+	if err := r.uploadConfig(ctx, articlesConfig); err != nil {
 		return err
 	}
 
@@ -112,13 +107,9 @@ func (r *HTTPRepository) PublishArticle(ctx context.Context, slug string) error 
 	return nil
 }
 
-func (r *HTTPRepository) uploadConfig(ctx context.Context, slug, path string) error {
+func (r *HTTPRepository) uploadConfig(ctx context.Context, path string) error {
 	if err := r.put(ctx, "articles.yml", content.YAMLContentType, path); err != nil {
 		return errors.Prefix("repository: create config", err)
-	}
-
-	if err := r.put(ctx, slug+"/", noContentType, noBody); err != nil {
-		return errors.Prefix("repository: create folder", err)
 	}
 
 	return nil
@@ -133,10 +124,6 @@ func (r *HTTPRepository) uploadArticle(ctx context.Context, slug, path string) e
 }
 
 func (r *HTTPRepository) uploadImages(ctx context.Context, slug, path string) error {
-	if err := r.put(ctx, slug+"/images/", noContentType, noBody); err != nil {
-		return errors.Prefix("repository: create images", err)
-	}
-
 	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return errors.Prefix("repository: walk image", err)
