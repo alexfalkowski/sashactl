@@ -11,12 +11,12 @@ Feature: New article
     And I should see a log entry of "created article" in the file "reports/new.log"
 
   @missing
-  Scenario: Unsuccessfully create an article with a name as the config is missing
+  Scenario: Successfully create an article with a name when the config is missing
     Given I start the system
     When we create an article with name "new article"
-    Then it should not run successfully
-    And I should not have an article named "new article"
-    And I should see a log entry of "not found" in the file "reports/new.log"
+    Then it should run successfully
+    And I should have an article named "new article"
+    And I should see a log entry of "created article" in the file "reports/new.log"
 
   @erroneous
   Scenario: Unsuccessfully create an article with a name as the config is broken
