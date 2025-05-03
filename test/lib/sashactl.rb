@@ -6,37 +6,12 @@ require 'base64'
 
 require 'aws-sdk-s3'
 
-require 'sashactl/v1/server'
 require 'sashactl/s3'
 
 module Sashactl
   class << self
     def s3
       @s3 ||= Sashactl::S3.new
-    end
-  end
-
-  module V1
-    class << self
-      def bucket_operational?
-        bucket_state == 'operational'
-      end
-
-      def bucket_missing?
-        bucket_state == 'missing'
-      end
-
-      def bucket_erroneous?
-        bucket_state == 'erroneous'
-      end
-
-      def apply_bucket_state(state)
-        ENV['BUCKET_STATE'] = state
-      end
-
-      def bucket_state
-        ENV.fetch('BUCKET_STATE', nil)
-      end
     end
   end
 end
