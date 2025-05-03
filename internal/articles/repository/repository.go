@@ -1,13 +1,12 @@
 package repository
 
-import (
-	"context"
+import "context"
 
-	"github.com/alexfalkowski/sashactl/internal/articles/model"
-)
-
-// Repository for books.
+// Repository for articles.
 type Repository interface {
-	// GetArticles from storage.
-	GetArticles(ctx context.Context) (*model.Articles, error)
+	// NewArticle to storage.
+	NewArticle(ctx context.Context, name string) error
+
+	// PublishArticle to storage.
+	PublishArticle(ctx context.Context, slug string) error
 }

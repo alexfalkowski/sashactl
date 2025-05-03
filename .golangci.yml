@@ -12,6 +12,7 @@ linters:
     - paralleltest
     - predeclared
     - tagalign
+    - tagliatelle
     - wrapcheck
   settings:
     lll:

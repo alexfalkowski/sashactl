@@ -1,4 +1,4 @@
-package new
+package publish
 
 import (
 	"context"
@@ -16,17 +16,17 @@ import (
 	"go.uber.org/fx"
 )
 
-// Register for new.
+// Register for publish.
 func Register(command *cmd.Command) {
-	flags := command.AddClient("new", "Create a new article",
+	flags := command.AddClient("publish", "Publish the article",
 		module.Module, feature.Module, telemetry.Module,
 		config.Module, Module, cmd.Module,
 	)
 	flags.AddInput("")
-	flags.StringP("name", "n", "", "name of the article")
+	flags.StringP("slug", "s", "", "slug of the article")
 }
 
-// Params for new.
+// Params for publish.
 type Params struct {
 	fx.In
 
@@ -38,16 +38,16 @@ type Params struct {
 	Repository repository.Repository
 }
 
-// New article to be created.
-func New(params Params) {
+// Publish the created article.
+func Publish(params Params) {
 	cmd.Start(params.Lifecycle, func(ctx context.Context) error {
-		name, _ := params.FlagSet.GetString("name")
+		slug, _ := params.FlagSet.GetString("slug")
 
-		if err := params.Repository.NewArticle(ctx, name); err != nil {
-			return errors.Prefix("new: create article", err)
+		if err := params.Repository.PublishArticle(ctx, slug); err != nil {
+			return errors.Prefix("publish: existing article", err)
 		}
 
-		params.Logger.Info("created article", slog.String("name", name))
+		params.Logger.Info("published article", slog.String("slug", slug))
 
 		return nil
 	})

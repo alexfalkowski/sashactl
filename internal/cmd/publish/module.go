@@ -1,4 +1,4 @@
-package new
+package publish
 
 import (
 	"github.com/alexfalkowski/sashactl/internal/articles"
@@ -8,5 +8,5 @@ import (
 // Module for fx.
 var Module = fx.Options(
 	articles.Module,
-	fx.Invoke(New),
+	fx.Invoke(Publish),
 )

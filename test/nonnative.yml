@@ -1,8 +1,7 @@
 version: "1.0"
 log: reports/nonnative.log
 servers:
-  -
-    name: bucket
+  - name: bucket
     class: Sashactl::V1::Server
     timeout: 1
     port: 5678
@@ -12,5 +11,17 @@ servers:
       host: 127.0.0.1
       port: 4567
       log: reports/proxy_bucket.log
+      options:
+        delay: 2
+services:
+  - name: aws
+    host: 127.0.0.1
+    port: 4600
+    proxy:
+      kind: fault_injection
+      host: 127.0.0.1
+      port: 4566
+      log: reports/proxy_aws.log
+      wait: 1
       options:
         delay: 2
