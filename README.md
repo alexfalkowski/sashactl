@@ -5,29 +5,77 @@
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 
 
-# Client
+# Sasha's Adventures Client
 
 Make sure you add the name of the client what what it is.
 
 ## Background
 
-Add a background.
+We wanted a way to record all the awesome adventures we were going to. Then we had a baby so less adventures!
 
 ### Why a client?
 
-Why is it important to have this client.
+So my wife learns to use the command line.
 
 ## Client
 
-Explain the client side of things.
+The client is broken down into multiple commands.
 
-## Design
+## Configuration
 
-Add anything interesting about the design.
+This client uses S3 (R2) so we need to configure it:
 
-## Other Systems
+```yaml
+aws:
+  accessKeyID: secrets/access_key_id
+  accessKeySecret: secrets/access_key_secret
+  address: R2 url
+  region: auto
+  retry:
+    attempts: 3
+    backoff: 100ms
+    timeout: 10s
+  timeout: 5s
+```
 
-Describe any other similar systems you took inspiration from.
+We also need to know where we will store the articles locally:
+
+```yaml
+articles:
+  path: path to articles
+```
+
+### New
+
+To create a new article, proceed with the following:
+
+```bash
+./sashactl new -n "This is a great article"
+```
+
+Then go edit the article (body, images, etc.)
+
+### Publish
+
+To publish a new article, proceed with the following:
+
+```bash
+./sashactl publish -s this-is-a-great-article
+```
+
+> [!CAUTION]
+>  This command takes a slug not a name!
+
+### Delete
+
+To delete a new article, proceed with the following:
+
+```bash
+./sashactl delete -s this-is-a-great-article
+```
+
+> [!CAUTION]
+>  This command takes a slug not a name!
 
 ## Development
 
@@ -40,8 +88,8 @@ The project follows the structure in [golang-standards/project-layout](https://g
 ### Dependencies
 
 Please make sure that you have the following installed:
-- [Ruby](.ruby-version)
-- [Golang](go.mod)
+- [Ruby](https://www.ruby-lang.org/en/)
+- [Golang](https://go.dev/)
 
 ### Style
 
@@ -50,7 +98,6 @@ This project favours the [Uber Go Style Guide](https://github.com/uber-go/guide/
 ### Setup
 
 Check out [CI](.circleci/config.yml).
-
 
 ### Changes
 
