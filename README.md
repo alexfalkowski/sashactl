@@ -44,6 +44,34 @@ articles:
   path: path to articles
 ```
 
+### Format
+
+The article format is a [YAML](https://yaml.org/) file, with the following format:
+
+```yaml
+name: This is a great article
+body: Add your story here
+slug: this-is-a-great-article
+images:
+  - name: filename.jpeg
+    description: Description of the image.
+```
+
+> [!CAUTION]
+>  The name/slug can't be changed as it is treaded as an ID.
+
+### Images
+
+The system only supports [JPEG](https://en.wikipedia.org/wiki/JPEG) files.
+
+If you are using photos from iPhone, this will usually use [HEIC](https://en.wikipedia.org/wiki/High_Efficiency_Image_File_Format) files.
+
+So to covert them with [ImageMagick](https://github.com/ImageMagick/ImageMagick), use the following:
+
+```bash
+magick mogrify -format jpeg *.heic
+```
+
 ### New
 
 To create a new article, proceed with the following:
