@@ -1,11 +1,5 @@
 articles:
-  address: http://localhost:5678
   path: reports/new
-  retry:
-    attempts: 3
-    backoff: 100ms
-    timeout: 10s
-  timeout: 5s
 aws:
   accessKeyID: secrets/access_key_id
   accessKeySecret: secrets/access_key_secret
