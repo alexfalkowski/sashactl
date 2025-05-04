@@ -1,3 +1,4 @@
+@new
 Feature: New article
   Create articles
 
@@ -13,7 +14,7 @@ Feature: New article
     And I should have an article named "new article"
     And I should see a log entry of "created article" in the file "reports/new.log"
 
-  Scenario: Unsuccessfully create an article with a name as the config is down
+  Scenario: Unsuccessfully create an article with a name when we have issues with the bucket
     And I set the proxy for service "aws" to "close_all"
     When we create an article with name "new article"
     Then it should not run successfully

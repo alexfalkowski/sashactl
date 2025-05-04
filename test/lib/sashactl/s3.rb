@@ -8,13 +8,13 @@ module Sashactl
     end
 
     def create
-      client.head_bucket(bucket: 'sasha-cms')
+      client.head_bucket(bucket: 'articles')
     rescue StandardError
-      client.create_bucket(bucket: 'sasha-cms')
+      client.create_bucket(bucket: 'articles')
     end
 
     def delete
-      bucket = Aws::S3::Bucket.new('sasha-cms', client: client)
+      bucket = Aws::S3::Bucket.new('articles', client: client)
       bucket.delete!
 
       true
@@ -23,7 +23,7 @@ module Sashactl
     end
 
     def exists?(path)
-      client.head_object(bucket: 'sasha-cms', key: path)
+      client.head_object(bucket: 'articles', key: path)
 
       true
     rescue StandardError

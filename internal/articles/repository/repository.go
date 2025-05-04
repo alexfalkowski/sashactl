@@ -9,4 +9,7 @@ type Repository interface {
 
 	// PublishArticle to storage.
 	PublishArticle(ctx context.Context, slug string) error
+
+	// DeleteArticle to storage.
+	DeleteArticle(ctx context.Context, slug string) error
 }

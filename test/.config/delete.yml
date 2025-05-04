@@ -1,6 +1,6 @@
 articles:
   address: http://localhost:5678
-  path: reports/publish
+  path: reports/delete
   retry:
     attempts: 3
     backoff: 100ms

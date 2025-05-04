@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'fileutils'
 require 'securerandom'
 require 'yaml'
-require 'base64'
 
 require 'aws-sdk-s3'
 
