@@ -3,3 +3,5 @@ vendor
 *.cov
 *.out
 /sashactl
+# Added by goreleaser init:
+dist/

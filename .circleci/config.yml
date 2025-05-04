@@ -72,7 +72,7 @@ jobs:
     resource_class: large
   release:
     docker:
-      - image: alexfalkowski/release:3.16
+      - image: alexfalkowski/release:3.17
     working_directory: ~/sashactl
     steps:
       - checkout
@@ -80,6 +80,7 @@ jobs:
       - run: git submodule update --init
       - run: make pull
       - run: release
+      - run: goreleaser release
     resource_class: large
   push-docker:
     docker:
