@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Before do
+Before('@new') do
   FileUtils.rm_rf('reports/new/articles')
 end
 

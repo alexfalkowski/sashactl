@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-Before do
-  Sashactl.s3.delete
-  Sashactl.s3.create
-end
-
 When('we publish an article with slug {string}') do |slug|
   cmd = Nonnative.go_executable(%w[cover], 'reports', '../sashactl', 'publish', '-s', slug, '-i', 'file:.config/publish.yml')
   pid = spawn({}, cmd, %i[out err] => ['reports/publish.log', 'a'])

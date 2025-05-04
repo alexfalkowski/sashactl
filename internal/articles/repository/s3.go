@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	"github.com/alexfalkowski/go-service/errors"
@@ -16,7 +18,7 @@ import (
 	"github.com/gosimple/slug"
 )
 
-var bucket = aws.String("sasha-cms")
+var bucket = aws.String("articles")
 
 // NewRepository for articles.
 func NewRepository(config *config.Config, encoder *yaml.Encoder, s3 *s3.Client) Repository {
@@ -55,6 +57,8 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
 		return errors.Prefix("repository: create articles", err)
 	}
 
+	defer configFile.Close()
+
 	if err := r.encoder.Encode(configFile, articles); err != nil {
 		return errors.Prefix("repository: encode articles", err)
 	}
@@ -81,20 +85,45 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
 	articlesPath, articlesConfig := r.configPath()
 
 	if err := r.uploadConfig(ctx, articlesConfig); err != nil {
-		return err
+		return errors.Prefix("repository: upload config", err)
 	}
 
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
 
 	if err := r.uploadArticle(ctx, slug, articleConfig); err != nil {
-		return err
+		return errors.Prefix("repository: upload article", err)
 	}
 
 	imagesPath := filepath.Join(articlePath, "images")
 
 	if err := r.uploadImages(ctx, slug, imagesPath); err != nil {
-		return errors.Prefix("repository: walk images", err)
+		return errors.Prefix("repository: upload images", err)
+	}
+
+	return nil
+}
+
+// DeleteArticle from the bucket.
+func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
+	articles, err := r.articles(ctx)
+	if err != nil {
+		return errors.Prefix("repository: get articles", err)
+	}
+
+	articlesPath, articlesConfig := r.configPath()
+	articlePath := filepath.Join(articlesPath, slug)
+
+	if err := r.delete(ctx, articlePath); err != nil {
+		return errors.Prefix("repository: delete files", err)
+	}
+
+	if err := os.RemoveAll(articlePath); err != nil {
+		return errors.Prefix("repository: delete folder", err)
+	}
+
+	if err := r.deleteConfig(ctx, slug, articlesConfig, articles); err != nil {
+		return errors.Prefix("repository: delete config", err)
 	}
 
 	return nil
@@ -102,7 +131,7 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
 
 func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
 	if err := r.put(ctx, "articles.yml", content.YAMLContentType, path); err != nil {
-		return errors.Prefix("repository: create config", err)
+		return err
 	}
 
 	return nil
@@ -110,7 +139,7 @@ func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
 
 func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) error {
 	if err := r.put(ctx, slug+"/article.yml", content.YAMLContentType, path); err != nil {
-		return errors.Prefix("repository: create article", err)
+		return err
 	}
 
 	return nil
@@ -119,7 +148,7 @@ func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) err
 func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) error {
 	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return errors.Prefix("repository: walk image", err)
+			return err
 		}
 
 		if info.IsDir() {
@@ -127,11 +156,32 @@ func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) erro
 		}
 
 		if err := r.put(ctx, slug+"/images/"+filepath.Base(path), content.JPEGContentType, path); err != nil {
-			return errors.Prefix("repository: create images", err)
+			return err
 		}
 
 		return nil
 	})
+}
+
+func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, articles *model.Articles) error {
+	articles.Articles = slices.DeleteFunc(articles.Articles, func(a *model.Article) bool { return a.Slug == slug })
+
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	if err := r.encoder.Encode(file, articles); err != nil {
+		return err
+	}
+
+	if err := r.uploadConfig(ctx, path); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *S3Repository) configPath() (string, string) {
@@ -139,6 +189,30 @@ func (r *S3Repository) configPath() (string, string) {
 	articlesConfig := filepath.Join(articlesPath, "articles.yml")
 
 	return articlesPath, articlesConfig
+}
+
+func (r *S3Repository) delete(ctx context.Context, path string) error {
+	prefix := r.config.Path + "/articles/"
+
+	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		key, _ := strings.CutPrefix(path, prefix)
+		input := &s3.DeleteObjectInput{
+			Bucket: bucket,
+			Key:    aws.String(key),
+		}
+
+		_, err = r.s3.DeleteObject(ctx, input)
+
+		return err
+	})
 }
 
 func (r *S3Repository) put(ctx context.Context, path, contentType, body string) error {
