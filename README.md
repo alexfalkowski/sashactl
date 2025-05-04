@@ -6,7 +6,7 @@
 
 # Sasha's Adventures Client
 
-Make sure you add the name of the client what what it is.
+This client publishes articles that are visible at https://sasha.sasha-adventures.com/ using https://github.com/alexfalkowski/sasha.
 
 ## Background
 
