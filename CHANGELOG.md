@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.0.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.0.0) - 2025-05-04
+
+- [`ce4e526`](https://github.com/alexfalkowski/sashactl/commit/ce4e526330c856a8b839d94596d64535c4995a44) feat(release): add goreleaser (#29)
+- [`7be8311`](https://github.com/alexfalkowski/sashactl/commit/7be8311cdfe001c9ea287e0addf83d0eebdc2c2c) docs(readme): add intro (#27)
+- [`34c7348`](https://github.com/alexfalkowski/sashactl/commit/34c73480f07da0efc22ca0f89e4d821aa6752b8f) docs(readme): add article format (#26)
+
 ## [v0.19.0](https://github.com/alexfalkowski/sashactl/releases/tag/v0.19.0) - 2025-05-04
 
 - [`faa93fb`](https://github.com/alexfalkowski/sashactl/commit/faa93fb96d41f3985283ac75928038ee5bf2884f) feat(article): expand path (#25)
