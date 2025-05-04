@@ -4,7 +4,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/alexfalkowski/sashactl.svg)](https://pkg.go.dev/github.com/alexfalkowski/sashactl)
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 
-
 # Sasha's Adventures Client
 
 Make sure you add the name of the client what what it is.
