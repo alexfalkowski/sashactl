@@ -185,14 +185,14 @@ func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, arti
 }
 
 func (r *S3Repository) configPath() (string, string) {
-	articlesPath := filepath.Join(r.config.Path, "articles")
+	articlesPath := filepath.Join(r.config.GetPath(), "articles")
 	articlesConfig := filepath.Join(articlesPath, "articles.yml")
 
 	return articlesPath, articlesConfig
 }
 
 func (r *S3Repository) delete(ctx context.Context, path string) error {
-	prefix := r.config.Path + "/articles/"
+	prefix := r.config.GetPath() + "/articles/"
 
 	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
