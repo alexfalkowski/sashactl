@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"os"
 	"path/filepath"
 	"slices"
 	"strings"
 
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	"github.com/alexfalkowski/go-service/errors"
+	"github.com/alexfalkowski/go-service/os"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
 	as3 "github.com/alexfalkowski/sashactl/internal/aws/s3"

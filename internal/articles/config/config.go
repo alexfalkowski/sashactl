@@ -9,5 +9,5 @@ type Config struct {
 
 // GetPath from config.
 func (c *Config) GetPath() string {
-	return os.ExpandPath(c.Path)
+	return os.CleanPath(c.Path)
 }
