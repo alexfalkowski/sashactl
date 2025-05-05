@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.2.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.2.0) - 2025-05-05
+
+- [`536e2f3`](https://github.com/alexfalkowski/sashactl/commit/536e2f3b67b9459d407c81976889e0a7fbfd911a) feat(release): only build darwin as that is the onlyb os we use (#31)
+
 ## [v1.1.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.1.0) - 2025-05-05
 
 - [`e152f84`](https://github.com/alexfalkowski/sashactl/commit/e152f84ec3baccc47f215c3b6b1edbb37000bfc4) feat(deps): upgraded github.com/alexfalkowski/go-service to v1.575.0 (#30)
