@@ -4,7 +4,6 @@ import (
 	"context"
 	"path/filepath"
 	"slices"
-	"strings"
 
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	"github.com/alexfalkowski/go-service/errors"
@@ -114,7 +113,7 @@ func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
 	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 
-	if err := r.delete(ctx, articlePath); err != nil {
+	if err := r.delete(ctx, articlesPath, articlePath); err != nil {
 		return errors.Prefix("repository: delete files", err)
 	}
 
@@ -138,7 +137,7 @@ func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
 }
 
 func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) error {
-	if err := r.put(ctx, slug+"/article.yml", content.YAMLContentType, path); err != nil {
+	if err := r.put(ctx, filepath.Join(slug, "article.yml"), content.YAMLContentType, path); err != nil {
 		return err
 	}
 
@@ -155,7 +154,7 @@ func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) erro
 			return nil
 		}
 
-		if err := r.put(ctx, slug+"/images/"+filepath.Base(path), content.JPEGContentType, path); err != nil {
+		if err := r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), content.JPEGContentType, path); err != nil {
 			return err
 		}
 
@@ -191,9 +190,7 @@ func (r *S3Repository) configPath() (string, string) {
 	return articlesPath, articlesConfig
 }
 
-func (r *S3Repository) delete(ctx context.Context, path string) error {
-	prefix := r.config.GetPath() + "/articles/"
-
+func (r *S3Repository) delete(ctx context.Context, base, path string) error {
 	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -203,10 +200,14 @@ func (r *S3Repository) delete(ctx context.Context, path string) error {
 			return nil
 		}
 
-		key, _ := strings.CutPrefix(path, prefix)
+		rel, err := filepath.Rel(base, path)
+		if err != nil {
+			return err
+		}
+
 		input := &s3.DeleteObjectInput{
 			Bucket: bucket,
-			Key:    aws.String(key),
+			Key:    aws.String(rel),
 		}
 
 		_, err = r.s3.DeleteObject(ctx, input)
