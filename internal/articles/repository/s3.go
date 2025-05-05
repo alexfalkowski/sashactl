@@ -7,11 +7,11 @@ import (
 
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	"github.com/alexfalkowski/go-service/errors"
+	"github.com/alexfalkowski/go-service/mime"
 	"github.com/alexfalkowski/go-service/os"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
 	as3 "github.com/alexfalkowski/sashactl/internal/aws/s3"
-	"github.com/alexfalkowski/sashactl/internal/content"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gosimple/slug"
@@ -129,7 +129,7 @@ func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
 }
 
 func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
-	if err := r.put(ctx, "articles.yml", content.YAMLContentType, path); err != nil {
+	if err := r.put(ctx, "articles.yml", mime.YAMLMediaType, path); err != nil {
 		return err
 	}
 
@@ -137,7 +137,7 @@ func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
 }
 
 func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) error {
-	if err := r.put(ctx, filepath.Join(slug, "article.yml"), content.YAMLContentType, path); err != nil {
+	if err := r.put(ctx, filepath.Join(slug, "article.yml"), mime.YAMLMediaType, path); err != nil {
 		return err
 	}
 
@@ -154,7 +154,7 @@ func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) erro
 			return nil
 		}
 
-		if err := r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), content.JPEGContentType, path); err != nil {
+		if err := r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), mime.JPEGMediaType, path); err != nil {
 			return err
 		}
 
