@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.3.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.3.0) - 2025-05-05
+
+- [`3ba82c1`](https://github.com/alexfalkowski/sashactl/commit/3ba82c1f326388ecab76f0f5f8e0e9c28b838de9) feat(repository): use join instead of concat (#32)
+
 ## [v1.2.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.2.0) - 2025-05-05
 
 - [`536e2f3`](https://github.com/alexfalkowski/sashactl/commit/536e2f3b67b9459d407c81976889e0a7fbfd911a) feat(release): only build darwin as that is the onlyb os we use (#31)
