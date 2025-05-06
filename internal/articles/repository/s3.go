@@ -7,32 +7,54 @@ import (
 
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	"github.com/alexfalkowski/go-service/errors"
+	"github.com/alexfalkowski/go-service/id"
+	"github.com/alexfalkowski/go-service/meta"
 	"github.com/alexfalkowski/go-service/mime"
 	"github.com/alexfalkowski/go-service/os"
+	tm "github.com/alexfalkowski/go-service/transport/meta"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
 	as3 "github.com/alexfalkowski/sashactl/internal/aws/s3"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gosimple/slug"
+	"go.uber.org/fx"
 )
 
 var bucket = aws.String("articles")
 
+// Params for articles.
+type Params struct {
+	fx.In
+
+	Config    *config.Config
+	Encoder   *yaml.Encoder
+	S3        *s3.Client
+	Generator id.Generator
+}
+
 // NewRepository for articles.
-func NewRepository(config *config.Config, encoder *yaml.Encoder, s3 *s3.Client) Repository {
-	return &S3Repository{config: config, encoder: encoder, s3: s3}
+func NewRepository(params Params) Repository {
+	return &S3Repository{
+		config:    params.Config,
+		encoder:   params.Encoder,
+		s3:        params.S3,
+		generator: params.Generator,
+	}
 }
 
 // S3Repository uses s3 client to interact with the content.
 type S3Repository struct {
-	config  *config.Config
-	s3      *s3.Client
-	encoder *yaml.Encoder
+	config    *config.Config
+	s3        *s3.Client
+	encoder   *yaml.Encoder
+	generator id.Generator
 }
 
 // NewArticle creates a new article with a name.
 func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
+	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+
 	articles, err := r.articles(ctx)
 	if err != nil {
 		return errors.Prefix("repository: get articles", err)
@@ -81,6 +103,7 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
 
 // PublishArticle to the bucket.
 func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
+	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articlesPath, articlesConfig := r.configPath()
 
 	if err := r.uploadConfig(ctx, articlesConfig); err != nil {
@@ -105,6 +128,8 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
 
 // DeleteArticle from the bucket.
 func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
+	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+
 	articles, err := r.articles(ctx)
 	if err != nil {
 		return errors.Prefix("repository: get articles", err)
