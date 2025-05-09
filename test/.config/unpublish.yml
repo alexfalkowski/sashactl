@@ -1,5 +1,5 @@
 articles:
-  path: reports/delete
+  path: reports/unpublish
 aws:
   accessKeyID: secrets/access_key_id
   accessKeySecret: secrets/access_key_secret

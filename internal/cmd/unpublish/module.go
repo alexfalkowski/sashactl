@@ -1,4 +1,4 @@
-package delete
+package unpublish
 
 import (
 	"github.com/alexfalkowski/sashactl/internal/articles"
@@ -8,5 +8,5 @@ import (
 // Module for fx.
 var Module = fx.Options(
 	articles.Module,
-	fx.Invoke(Delete),
+	fx.Invoke(Unpublish),
 )
