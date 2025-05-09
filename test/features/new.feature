@@ -1,6 +1,6 @@
 @new
 Feature: New article
-  Create articles
+  Create new articles
 
   Scenario: Successfully create an article with a name
     When we create an article with name "new article"

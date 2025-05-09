@@ -1,5 +1,5 @@
 Feature: Publish articles
-  Publish existing articles
+  Publish created articles
 
   Scenario: Successfully publish an article with a slug
     When we publish an article with slug "1984"
