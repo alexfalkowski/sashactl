@@ -54,15 +54,15 @@ type S3Repository struct {
 // NewArticle creates a new article with a name.
 func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	articlesPath, articlesConfig := r.configPath()
 
-	articles, err := r.articles(ctx)
+	articles, err := r.articles(ctx, articlesConfig)
 	if err != nil {
 		return errors.Prefix("repository: get articles", err)
 	}
 
 	slug := slug.Make(name)
 
-	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
 
@@ -129,13 +129,13 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
 // DeleteArticle from the bucket.
 func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	articlesPath, articlesConfig := r.configPath()
 
-	articles, err := r.articles(ctx)
+	articles, err := r.articles(ctx, articlesConfig)
 	if err != nil {
 		return errors.Prefix("repository: get articles", err)
 	}
 
-	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 
 	if err := r.delete(ctx, articlesPath, articlePath); err != nil {
@@ -208,13 +208,6 @@ func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, arti
 	return nil
 }
 
-func (r *S3Repository) configPath() (string, string) {
-	articlesPath := filepath.Join(r.config.GetPath(), "articles")
-	articlesConfig := filepath.Join(articlesPath, "articles.yml")
-
-	return articlesPath, articlesConfig
-}
-
 func (r *S3Repository) delete(ctx context.Context, base, path string) error {
 	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -261,8 +254,22 @@ func (r *S3Repository) put(ctx context.Context, path, contentType, body string) 
 	return err
 }
 
-func (r *S3Repository) articles(ctx context.Context) (*model.Articles, error) {
+func (r *S3Repository) articles(ctx context.Context, path string) (*model.Articles, error) {
 	site := &model.Articles{}
+
+	if os.PathExists(path) {
+		f, err := os.Open(path)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := r.encoder.Decode(f, site); err != nil {
+			return nil, err
+		}
+
+		return site, nil
+	}
+
 	input := &s3.GetObjectInput{
 		Bucket: bucket,
 		Key:    aws.String("articles.yml"),
@@ -282,4 +289,11 @@ func (r *S3Repository) articles(ctx context.Context) (*model.Articles, error) {
 	}
 
 	return site, nil
+}
+
+func (r *S3Repository) configPath() (string, string) {
+	articlesPath := filepath.Join(r.config.GetPath(), "articles")
+	articlesConfig := filepath.Join(articlesPath, "articles.yml")
+
+	return articlesPath, articlesConfig
 }
