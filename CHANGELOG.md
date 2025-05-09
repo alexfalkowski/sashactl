@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.19.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.19.0) - 2025-05-09
+
+- [`7e61e21`](https://github.com/alexfalkowski/sashactl/commit/7e61e2152af841d78ee9ea36cad1b5d1e583ce61) feat(deps): bump bin from `ac9a5b2` to `c59b166` (#52)
+- [`84bb172`](https://github.com/alexfalkowski/sashactl/commit/84bb172badfa7395ef90201dc45587b7544ffb8e) test(article): move from reports to fixtures (#51)
+
 ## [v1.18.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.18.0) - 2025-05-09
 
 - [`fe20fba`](https://github.com/alexfalkowski/sashactl/commit/fe20fba0e6f68ed89dc8c9100deaaea4a37e4641) feat(article): add ability to delete a new article (#50)
