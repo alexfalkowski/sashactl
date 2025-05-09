@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.17.1](https://github.com/alexfalkowski/sashactl/releases/tag/v1.17.1) - 2025-05-09
+
+- [`a6ab4c6`](https://github.com/alexfalkowski/sashactl/commit/a6ab4c6e6a98c3f36b2f3a27b6c107f16d68b5e5) fix(unpublish): delete article (#49)
+
 ## [v1.17.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.17.0) - 2025-05-09
 
 - [`ba62b44`](https://github.com/alexfalkowski/sashactl/commit/ba62b44e3e77e43ece94f51804ee2f8a0892778e) feat(unpublish): rename from delete (#48)
