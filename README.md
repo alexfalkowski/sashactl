@@ -93,12 +93,12 @@ To publish a new article, proceed with the following:
 > [!CAUTION]
 >  This command takes a slug not a name!
 
-### Delete
+### Unpublish
 
-To delete a new article, proceed with the following:
+To unpublish an article, proceed with the following:
 
 ```bash
-./sashactl delete -s this-is-a-great-article
+./sashactl unpublish -s this-is-a-great-article
 ```
 
 > [!CAUTION]

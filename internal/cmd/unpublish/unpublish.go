@@ -1,4 +1,4 @@
-package delete
+package unpublish
 
 import (
 	"context"
@@ -18,9 +18,9 @@ import (
 	"go.uber.org/fx"
 )
 
-// Register for delete.
+// Register for unpublish.
 func Register(command *cmd.Command) {
-	flags := command.AddClient("delete", "Delete a published article",
+	flags := command.AddClient("unpublish", "Unpublish an article",
 		module.Module, feature.Module, telemetry.Module,
 		config.Module, Module, cmd.Module,
 	)
@@ -28,7 +28,7 @@ func Register(command *cmd.Command) {
 	flags.StringP("slug", "s", "", "slug of the article")
 }
 
-// Params for new.
+// Params for unpublish.
 type Params struct {
 	fx.In
 
@@ -40,8 +40,8 @@ type Params struct {
 	Repository repository.Repository
 }
 
-// Delete a published article.
-func Delete(params Params) {
+// Unpublish a article.
+func Unpublish(params Params) {
 	cmd.Start(params.Lifecycle, func(ctx context.Context) error {
 		slug, _ := params.FlagSet.GetString("slug")
 		if strings.IsEmpty(slug) {
@@ -49,10 +49,10 @@ func Delete(params Params) {
 		}
 
 		if err := params.Repository.DeleteArticle(ctx, slug); err != nil {
-			return se.Prefix("delete: published article", err)
+			return se.Prefix("unpublish: published article", err)
 		}
 
-		params.Logger.Info("deleted article", slog.String("slug", slug))
+		params.Logger.Info("unpublished article", slog.String("slug", slug))
 
 		return nil
 	})
