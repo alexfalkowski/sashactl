@@ -11,6 +11,7 @@ import (
 	"github.com/alexfalkowski/go-service/meta"
 	"github.com/alexfalkowski/go-service/mime"
 	"github.com/alexfalkowski/go-service/os"
+	"github.com/alexfalkowski/go-service/runtime"
 	tm "github.com/alexfalkowski/go-service/transport/meta"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
@@ -52,37 +53,34 @@ type S3Repository struct {
 }
 
 // NewArticle creates a new article with a name.
-func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
+func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.Prefix("repository: new article", runtime.ConvertRecover(r))
+		}
+	}()
+
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articlesPath, articlesConfig := r.configPath()
-
-	articles, err := r.articles(ctx, articlesConfig)
-	if err != nil {
-		return errors.Prefix("repository: get articles", err)
-	}
-
+	articles := r.articles(ctx)
 	slug := slug.Make(name)
 
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
 
-	if err := os.MkdirAll(filepath.Join(articlePath, "images"), 0o777); err != nil {
-		return errors.Prefix("repository: mkdir", err)
-	}
+	err = os.MkdirAll(filepath.Join(articlePath, "images"), 0o777)
+	runtime.Must(err)
 
 	article := &model.Article{Name: name, Slug: slug}
 	articles.Articles = append(articles.Articles, article)
 
 	configFile, err := os.Create(articlesConfig)
-	if err != nil {
-		return errors.Prefix("repository: create articles", err)
-	}
+	runtime.Must(err)
 
 	defer configFile.Close()
 
-	if err := r.encoder.Encode(configFile, articles); err != nil {
-		return errors.Prefix("repository: encode articles", err)
-	}
+	err = r.encoder.Encode(configFile, articles)
+	runtime.Must(err)
 
 	article.Body = "Add my story!"
 	article.Images = []*model.Image{
@@ -90,138 +88,106 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) error {
 	}
 
 	articleFile, err := os.Create(articleConfig)
-	if err != nil {
-		return errors.Prefix("repository: create article", err)
-	}
+	runtime.Must(err)
 
-	if err := r.encoder.Encode(articleFile, article); err != nil {
-		return errors.Prefix("repository: encode article", err)
-	}
+	err = r.encoder.Encode(articleFile, article)
+	runtime.Must(err)
 
 	return nil
 }
 
 // PublishArticle to the bucket.
-func (r *S3Repository) PublishArticle(ctx context.Context, slug string) error {
+func (r *S3Repository) PublishArticle(ctx context.Context, slug string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.Prefix("repository: publish article", runtime.ConvertRecover(r))
+		}
+	}()
+
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articlesPath, articlesConfig := r.configPath()
-
-	if err := r.uploadConfig(ctx, articlesConfig); err != nil {
-		return errors.Prefix("repository: upload config", err)
-	}
+	r.uploadConfig(ctx, articlesConfig)
 
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
-
-	if err := r.uploadArticle(ctx, slug, articleConfig); err != nil {
-		return errors.Prefix("repository: upload article", err)
-	}
+	r.uploadArticle(ctx, slug, articleConfig)
 
 	imagesPath := filepath.Join(articlePath, "images")
-
-	if err := r.uploadImages(ctx, slug, imagesPath); err != nil {
-		return errors.Prefix("repository: upload images", err)
-	}
+	r.uploadImages(ctx, slug, imagesPath)
 
 	return nil
 }
 
 // DeleteArticle from the bucket.
-func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) error {
+func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.Prefix("repository: delete article", runtime.ConvertRecover(r))
+		}
+	}()
+
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articlesPath, articlesConfig := r.configPath()
 
-	articles, err := r.articles(ctx, articlesConfig)
-	if err != nil {
-		return errors.Prefix("repository: get articles", err)
-	}
-
+	articles := r.articles(ctx)
 	articlePath := filepath.Join(articlesPath, slug)
 
-	if err := r.delete(ctx, articlesPath, articlePath); err != nil {
-		return errors.Prefix("repository: delete files", err)
-	}
+	r.delete(ctx, articlesPath, articlePath)
 
-	if err := os.RemoveAll(articlePath); err != nil {
-		return errors.Prefix("repository: delete folder", err)
-	}
+	err = os.RemoveAll(articlePath)
+	runtime.Must(err)
 
-	if err := r.deleteConfig(ctx, slug, articlesConfig, articles); err != nil {
-		return errors.Prefix("repository: delete config", err)
-	}
+	r.deleteConfig(ctx, slug, articlesConfig, articles)
 
 	return nil
 }
 
-func (r *S3Repository) uploadConfig(ctx context.Context, path string) error {
-	if err := r.put(ctx, "articles.yml", mime.YAMLMediaType, path); err != nil {
-		return err
-	}
-
-	return nil
+func (r *S3Repository) uploadConfig(ctx context.Context, path string) {
+	r.put(ctx, "articles.yml", mime.YAMLMediaType, path)
 }
 
-func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) error {
-	if err := r.put(ctx, filepath.Join(slug, "article.yml"), mime.YAMLMediaType, path); err != nil {
-		return err
-	}
-
-	return nil
+func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) {
+	r.put(ctx, filepath.Join(slug, "article.yml"), mime.YAMLMediaType, path)
 }
 
-func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) error {
-	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
+func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) {
+	_ = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		runtime.Must(err)
 
 		if info.IsDir() {
 			return nil
 		}
 
-		if err := r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), mime.JPEGMediaType, path); err != nil {
-			return err
-		}
+		r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), mime.JPEGMediaType, path)
 
 		return nil
 	})
 }
 
-func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, articles *model.Articles) error {
+func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, articles *model.Articles) {
 	articles.Articles = slices.DeleteFunc(articles.Articles, func(a *model.Article) bool { return a.Slug == slug })
 
 	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
+	runtime.Must(err)
 
 	defer file.Close()
 
-	if err := r.encoder.Encode(file, articles); err != nil {
-		return err
-	}
+	err = r.encoder.Encode(file, articles)
+	runtime.Must(err)
 
-	if err := r.uploadConfig(ctx, path); err != nil {
-		return err
-	}
-
-	return nil
+	r.uploadConfig(ctx, path)
 }
 
-func (r *S3Repository) delete(ctx context.Context, base, path string) error {
-	return filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
+func (r *S3Repository) delete(ctx context.Context, base, path string) {
+	_ = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		runtime.Must(err)
 
 		if info.IsDir() {
 			return nil
 		}
 
 		rel, err := filepath.Rel(base, path)
-		if err != nil {
-			return err
-		}
+		runtime.Must(err)
 
 		input := &s3.DeleteObjectInput{
 			Bucket: bucket,
@@ -229,16 +195,15 @@ func (r *S3Repository) delete(ctx context.Context, base, path string) error {
 		}
 
 		_, err = r.s3.DeleteObject(ctx, input)
+		runtime.Must(err)
 
-		return err
+		return nil
 	})
 }
 
-func (r *S3Repository) put(ctx context.Context, path, contentType, body string) error {
+func (r *S3Repository) put(ctx context.Context, path, contentType, body string) {
 	file, err := os.Open(body)
-	if err != nil {
-		return err
-	}
+	runtime.Must(err)
 
 	defer file.Close()
 
@@ -250,26 +215,11 @@ func (r *S3Repository) put(ctx context.Context, path, contentType, body string) 
 	}
 
 	_, err = r.s3.PutObject(ctx, input)
-
-	return err
+	runtime.Must(err)
 }
 
-func (r *S3Repository) articles(ctx context.Context, path string) (*model.Articles, error) {
+func (r *S3Repository) articles(ctx context.Context) *model.Articles {
 	site := &model.Articles{}
-
-	if os.PathExists(path) {
-		f, err := os.Open(path)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := r.encoder.Decode(f, site); err != nil {
-			return nil, err
-		}
-
-		return site, nil
-	}
-
 	input := &s3.GetObjectInput{
 		Bucket: bucket,
 		Key:    aws.String("articles.yml"),
@@ -278,17 +228,18 @@ func (r *S3Repository) articles(ctx context.Context, path string) (*model.Articl
 	out, err := r.s3.GetObject(ctx, input)
 	if err != nil {
 		if as3.IsNotFound(err) {
-			return site, nil
+			return site
 		}
 
-		return nil, err
+		runtime.Must(err)
+
+		return nil
 	}
 
-	if err := r.encoder.Decode(out.Body, site); err != nil {
-		return nil, err
-	}
+	err = r.encoder.Decode(out.Body, site)
+	runtime.Must(err)
 
-	return site, nil
+	return site
 }
 
 func (r *S3Repository) configPath() (string, string) {
