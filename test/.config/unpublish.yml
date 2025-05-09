@@ -1,5 +1,5 @@
 articles:
-  path: reports/unpublish
+  path: fixtures/unpublish
 aws:
   accessKeyID: secrets/access_key_id
   accessKeySecret: secrets/access_key_secret

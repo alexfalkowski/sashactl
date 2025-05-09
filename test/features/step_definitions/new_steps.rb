@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Before('@new') do
-  FileUtils.rm_rf('reports/new/articles')
+  FileUtils.rm_rf('fixtures/new/articles')
 end
 
 When('we create an article with name {string}') do |name|
@@ -18,7 +18,7 @@ end
 Then('I should have an article named {string}') do |name|
   name = name.split.join('-')
 
-  expect(File).to exist("reports/new/articles/#{name}")
+  expect(File).to exist("fixtures/new/articles/#{name}")
 end
 
 Then('it should not run successfully') do
@@ -28,5 +28,5 @@ end
 Then('I should not have an article named {string}') do |name|
   name = name.split.join('-')
 
-  expect(File).to_not exist("reports/new/articles/#{name}")
+  expect(File).to_not exist("fixtures/new/articles/#{name}")
 end
