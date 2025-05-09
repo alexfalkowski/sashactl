@@ -1,7 +1,7 @@
 .bundle
-reports/new/articles
-reports/delete/articles
-reports/unpublish/articles
+fixtures/new/articles
+fixtures/delete/articles
+fixtures/unpublish/articles
 *.html
 *.log
 *.xml

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 Before('@delete') do
-  FileUtils.rm_rf('reports/delete/articles')
-  FileUtils.mkdir_p 'reports/delete/articles'
-  FileUtils.cp_r 'reports/publish/articles/.', 'reports/delete/articles'
+  FileUtils.rm_rf('fixtures/delete/articles')
+  FileUtils.mkdir_p 'fixtures/delete/articles'
+  FileUtils.cp_r 'fixtures/publish/articles/.', 'fixtures/delete/articles'
 end
 
 When('we delete an article with slug {string}') do |slug|
@@ -14,9 +14,9 @@ When('we delete an article with slug {string}') do |slug|
 end
 
 Then('I should have a deleted article with slug {string}') do |slug|
-  expect(File.read('reports/delete/articles/articles.yml')).not_to include slug
+  expect(File.read('fixtures/delete/articles/articles.yml')).not_to include slug
 end
 
 Then('the deleted article with slug {string} should be removed from the file system') do |slug|
-  expect(File).to_not exist("reports/delete/articles/#{slug}")
+  expect(File).to_not exist("fixtures/delete/articles/#{slug}")
 end
