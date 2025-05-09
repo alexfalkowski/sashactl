@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-client:
     docker:
-      - image: alexfalkowski/go:2.16
+      - image: alexfalkowski/go:2.17
       - image: localstack/localstack:4.3
         environment:
           SERVICES: s3
@@ -59,7 +59,7 @@ jobs:
     resource_class: large
   build-docker:
     docker:
-      - image: alexfalkowski/go:2.16
+      - image: alexfalkowski/go:2.17
     working_directory: ~/sashactl
     steps:
       - checkout
@@ -72,7 +72,7 @@ jobs:
     resource_class: large
   release:
     docker:
-      - image: alexfalkowski/release:3.18
+      - image: alexfalkowski/release:3.19
     working_directory: ~/sashactl
     steps:
       - checkout
@@ -84,7 +84,7 @@ jobs:
     resource_class: large
   push-docker:
     docker:
-      - image: alexfalkowski/go:2.16
+      - image: alexfalkowski/go:2.17
     working_directory: ~/sashactl
     steps:
       - checkout
