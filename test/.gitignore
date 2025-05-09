@@ -1,6 +1,6 @@
 .bundle
 reports/new/articles
-reports/delete/articles
+reports/unpublish/articles
 *.html
 *.log
 *.xml
