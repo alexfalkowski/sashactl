@@ -6,14 +6,6 @@ Before('@unpublish') do
   FileUtils.cp_r 'reports/publish/articles/.', 'reports/unpublish/articles'
 end
 
-Given('we have a published article with slug {string}') do |slug|
-  cmd = Nonnative.go_executable(%w[cover], 'reports', '../sashactl', 'publish', '-s', slug, '-i', 'file:.config/unpublish.yml')
-  pid = spawn({}, cmd, %i[out err] => ['reports/unpublish.log', 'a'])
-  _, status = Process.waitpid2(pid)
-
-  expect(status.exitstatus).to eq(0)
-end
-
 When('we unpublish an article with slug {string}') do |slug|
   cmd = Nonnative.go_executable(%w[cover], 'reports', '../sashactl', 'unpublish', '-s', slug, '-i', 'file:.config/unpublish.yml')
   pid = spawn({}, cmd, %i[out err] => ['reports/unpublish.log', 'a'])
@@ -21,12 +13,12 @@ When('we unpublish an article with slug {string}') do |slug|
   _, @status = Process.waitpid2(pid)
 end
 
-Then('I should have a unpublished article with slug {string}') do |slug|
+Then('I should have an unpublished article with slug {string}') do |slug|
   expect(Sashactl.s3.exists?("#{slug}/article.yml")).to be false
   expect(Sashactl.s3.exists?("#{slug}/images/1984.jpeg")).to be false
   expect(File.read('reports/unpublish/articles/articles.yml')).not_to include slug
 end
 
-Then('the article with slug {string} should be removed from the file system') do |slug|
+Then('the unpublished article with slug {string} should be removed from the file system') do |slug|
   expect(File).to_not exist("reports/unpublish/articles/#{slug}")
 end

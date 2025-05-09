@@ -1,0 +1,19 @@
+articles:
+  path: reports/delete
+aws:
+  accessKeyID: secrets/access_key_id
+  accessKeySecret: secrets/access_key_secret
+  address: http://localhost:4600
+  region: eu-west-1
+  retry:
+    attempts: 3
+    backoff: 100ms
+    timeout: 10s
+  timeout: 5s
+environment: development
+id:
+  kind: uuid
+telemetry:
+  logger:
+    kind: text
+    level: info

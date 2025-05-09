@@ -66,11 +66,40 @@ The system only supports [JPEG](https://en.wikipedia.org/wiki/JPEG) files.
 
 If you are using photos from iPhone, this will usually use [HEIC](https://en.wikipedia.org/wiki/High_Efficiency_Image_File_Format) files.
 
+#### Convert
+
 So to covert them with [ImageMagick](https://github.com/ImageMagick/ImageMagick), use the following:
 
 ```bash
 magick mogrify -format jpeg *.heic
 ```
+
+#### Resize
+
+To resize by 50%, proceed with the following:
+
+```bash
+magick mogrify -resize 50% *.jpg
+```
+
+To resize by dimensions, proceed with the following:
+
+```bash
+magick mogrify -resize 1200x800 *.jpg
+```
+
+For more inspiration, check out [What is The Best Image Size For an Article](https://shortpixel.com/blog/best-image-size/).
+
+### Delete
+
+To delete a new article, proceed with the following:
+
+```bash
+./sashactl delete -s this-is-a-great-article
+```
+
+> [!CAUTION]
+>  This command takes a slug not a name!
 
 ### New
 

@@ -48,8 +48,8 @@ func Unpublish(params Params) {
 			return errors.ErrNoSlug
 		}
 
-		if err := params.Repository.DeleteArticle(ctx, slug); err != nil {
-			return se.Prefix("unpublish: published article", err)
+		if err := params.Repository.UnpublishArticle(ctx, slug); err != nil {
+			return se.Prefix("unpublish: existing article", err)
 		}
 
 		params.Logger.Info("unpublished article", slog.String("slug", slug))

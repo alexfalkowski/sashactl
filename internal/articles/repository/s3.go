@@ -52,6 +52,27 @@ type S3Repository struct {
 	generator id.Generator
 }
 
+// DeleteArticle from disk.
+func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.Prefix("repository: unpublish article", runtime.ConvertRecover(r))
+		}
+	}()
+
+	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	articles := r.articles(ctx)
+	articlesPath, articlesConfig := r.configPath()
+	articlePath := filepath.Join(articlesPath, slug)
+
+	err = os.RemoveAll(articlePath)
+	runtime.Must(err)
+
+	r.deleteConfig(ctx, slug, articlesConfig, articles)
+
+	return nil
+}
+
 // NewArticle creates a new article with a name.
 func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) {
 	defer func() {
@@ -61,10 +82,9 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 	}()
 
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
-	articlesPath, articlesConfig := r.configPath()
 	articles := r.articles(ctx)
 	slug := slug.Make(name)
-
+	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
 
@@ -106,30 +126,32 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) (err err
 
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articlesPath, articlesConfig := r.configPath()
+
 	r.uploadConfig(ctx, articlesConfig)
 
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfig := filepath.Join(articlePath, "article.yml")
+
 	r.uploadArticle(ctx, slug, articleConfig)
 
 	imagesPath := filepath.Join(articlePath, "images")
+
 	r.uploadImages(ctx, slug, imagesPath)
 
 	return nil
 }
 
-// DeleteArticle from the bucket.
-func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err error) {
+// UnpublishArticle from the bucket.
+func (r *S3Repository) UnpublishArticle(ctx context.Context, slug string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.Prefix("repository: delete article", runtime.ConvertRecover(r))
+			err = errors.Prefix("repository: unpublish article", runtime.ConvertRecover(r))
 		}
 	}()
 
 	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
-	articlesPath, articlesConfig := r.configPath()
-
 	articles := r.articles(ctx)
+	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 
 	r.delete(ctx, articlesPath, articlePath)

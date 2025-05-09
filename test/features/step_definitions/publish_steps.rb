@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+Given('we have a published article with slug {string}') do |slug|
+  cmd = Nonnative.go_executable(%w[cover], 'reports', '../sashactl', 'publish', '-s', slug, '-i', 'file:.config/publish.yml')
+  pid = spawn({}, cmd, %i[out err] => ['reports/publish.log', 'a'])
+  _, status = Process.waitpid2(pid)
+
+  expect(status.exitstatus).to eq(0)
+end
+
 When('we publish an article with slug {string}') do |slug|
   cmd = Nonnative.go_executable(%w[cover], 'reports', '../sashactl', 'publish', '-s', slug, '-i', 'file:.config/publish.yml')
   pid = spawn({}, cmd, %i[out err] => ['reports/publish.log', 'a'])
