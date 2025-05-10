@@ -18,11 +18,13 @@ end
 Then('I should have a published article with slug {string}') do |slug|
   expect(Sashactl.s3.exists?('articles.yml')).to be true
   expect(Sashactl.s3.exists?("#{slug}/article.yml")).to be true
+  expect(Sashactl.s3.exists?("#{slug}/article.md")).to be true
   expect(Sashactl.s3.exists?("#{slug}/images/1984.jpeg")).to be true
 end
 
 Then('I should not have a published article with slug {string}') do |slug|
   expect(Sashactl.s3.exists?('articles.yml')).to be false
   expect(Sashactl.s3.exists?("#{slug}/article.yml")).to be false
+  expect(Sashactl.s3.exists?("#{slug}/article.md")).to be false
   expect(Sashactl.s3.exists?("#{slug}/images/1984.jpeg")).to be false
 end
