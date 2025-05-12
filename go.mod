@@ -3,7 +3,7 @@ module github.com/alexfalkowski/sashactl
 go 1.24.0
 
 require (
-	github.com/alexfalkowski/go-service v1.591.0
+	github.com/alexfalkowski/go-service v1.592.0
 	github.com/aws/aws-sdk-go-v2 v1.36.3
 	github.com/aws/aws-sdk-go-v2/config v1.29.14
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.67
@@ -103,7 +103,7 @@ require (
 	github.com/sony/gobreaker v1.0.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
-	github.com/standard-webhooks/standard-webhooks/libraries v0.0.0-20250305151702-d347f20c7e91 // indirect
+	github.com/standard-webhooks/standard-webhooks/libraries v0.0.0-20250511132225-4668a470bf48 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.9.0 // indirect
 	github.com/urfave/negroni/v3 v3.1.1 // indirect
