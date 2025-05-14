@@ -106,7 +106,6 @@ workflows:
       - build-docker:
           context: gh
       - release:
-          serial-group: release
           context: gh
           requires:
             - build-client
@@ -115,7 +114,6 @@ workflows:
             branches:
               only: master
       - push-docker:
-          serial-group: push-docker
           context: docker
           requires:
             - release
