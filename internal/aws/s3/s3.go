@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 
+	"github.com/alexfalkowski/go-service/bytes"
 	"github.com/alexfalkowski/go-service/env"
 	"github.com/alexfalkowski/go-service/id"
 	"github.com/alexfalkowski/go-service/telemetry/logger"
 	"github.com/alexfalkowski/go-service/telemetry/metrics"
 	"github.com/alexfalkowski/go-service/telemetry/tracer"
 	"github.com/alexfalkowski/go-service/transport/http"
-	ac "github.com/alexfalkowski/sashactl/internal/aws/config"
+	conf "github.com/alexfalkowski/sashactl/internal/aws/config"
 	"github.com/alexfalkowski/sashactl/internal/aws/endpoint"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -34,7 +35,7 @@ type ClientParams struct {
 	Meter     *metrics.Meter
 	ID        id.Generator
 	Endpoint  endpoint.Endpoint
-	Config    *ac.Config
+	Config    *conf.Config
 	Logger    *logger.Logger
 	UserAgent env.UserAgent
 }
@@ -62,7 +63,13 @@ func NewClient(params ClientParams) (*s3.Client, error) {
 	)
 
 	opts := []func(*config.LoadOptions) error{
-		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(string(accessKeyID), string(accessKeySecret), "")),
+		config.WithCredentialsProvider(
+			credentials.NewStaticCredentialsProvider(
+				bytes.String(accessKeyID),
+				bytes.String(accessKeySecret),
+				"",
+			),
+		),
 		config.WithRegion(params.Config.Region),
 		config.WithHTTPClient(httpClient),
 		config.WithRetryMaxAttempts(int(params.Config.Retry.Attempts)), //nolint:gosec
