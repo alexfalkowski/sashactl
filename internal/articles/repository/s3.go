@@ -32,6 +32,7 @@ type Params struct {
 	Config    *config.Config
 	Encoder   *yaml.Encoder
 	S3        *s3.Client
+	FS        *os.FS
 	Generator id.Generator
 }
 
@@ -41,6 +42,7 @@ func NewRepository(params Params) Repository {
 		config:    params.Config,
 		encoder:   params.Encoder,
 		s3:        params.S3,
+		fs:        params.FS,
 		generator: params.Generator,
 	}
 }
@@ -50,6 +52,7 @@ type S3Repository struct {
 	config    *config.Config
 	s3        *s3.Client
 	encoder   *yaml.Encoder
+	fs        *os.FS
 	generator id.Generator
 }
 
@@ -66,7 +69,7 @@ func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err erro
 	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
 
-	err = os.RemoveAll(articlePath)
+	err = r.fs.RemoveAll(articlePath)
 	runtime.Must(err)
 
 	r.deleteConfig(ctx, slug, articlesConfig, articles)
@@ -89,13 +92,13 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 	articlePath := filepath.Join(articlesPath, slug)
 	articleConfigPath := filepath.Join(articlePath, "article.yml")
 
-	err = os.MkdirAll(filepath.Join(articlePath, "images"), 0o777)
+	err = r.fs.MkdirAll(filepath.Join(articlePath, "images"), 0o777)
 	runtime.Must(err)
 
 	article := &model.Article{Name: name, Slug: slug}
 	articles.Articles = append(articles.Articles, article)
 
-	configFile, err := os.Create(articlesConfig)
+	configFile, err := r.fs.Create(articlesConfig)
 	runtime.Must(err)
 
 	defer r.close(configFile)
@@ -103,7 +106,7 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 	err = r.encoder.Encode(configFile, articles)
 	runtime.Must(err)
 
-	articleConfigFile, err := os.Create(articleConfigPath)
+	articleConfigFile, err := r.fs.Create(articleConfigPath)
 	runtime.Must(err)
 
 	defer r.close(articleConfigFile)
@@ -113,7 +116,7 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 
 	articleBodyPath := filepath.Join(articlePath, "article.md")
 
-	articleBodyFile, err := os.Create(articleBodyPath)
+	articleBodyFile, err := r.fs.Create(articleBodyPath)
 	runtime.Must(err)
 
 	defer r.close(articleBodyFile)
@@ -158,7 +161,7 @@ func (r *S3Repository) UnpublishArticle(ctx context.Context, slug string) (err e
 
 	r.delete(ctx, articlesPath, articlePath)
 
-	err = os.RemoveAll(articlePath)
+	err = r.fs.RemoveAll(articlePath)
 	runtime.Must(err)
 
 	r.deleteConfig(ctx, slug, articlesConfig, articles)
@@ -195,7 +198,7 @@ func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) {
 func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, articles *model.Articles) {
 	articles.Articles = slices.DeleteFunc(articles.Articles, func(a *model.Article) bool { return a.Slug == slug })
 
-	file, err := os.Create(path)
+	file, err := r.fs.Create(path)
 	runtime.Must(err)
 
 	defer r.close(file)
@@ -230,7 +233,7 @@ func (r *S3Repository) delete(ctx context.Context, base, path string) {
 }
 
 func (r *S3Repository) put(ctx context.Context, path, contentType, body string) {
-	file, err := os.Open(body)
+	file, err := r.fs.Open(body)
 	runtime.Must(err)
 
 	defer r.close(file)
@@ -276,7 +279,7 @@ func (r *S3Repository) close(closer io.Closer) {
 }
 
 func (r *S3Repository) configPath() (string, string) {
-	articlesPath := filepath.Join(r.config.GetPath(), "articles")
+	articlesPath := filepath.Join(r.config.GetPath(r.fs), "articles")
 	articlesConfig := filepath.Join(articlesPath, "articles.yml")
 
 	return articlesPath, articlesConfig

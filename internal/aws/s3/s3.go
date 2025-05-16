@@ -7,6 +7,7 @@ import (
 	"github.com/alexfalkowski/go-service/bytes"
 	"github.com/alexfalkowski/go-service/env"
 	"github.com/alexfalkowski/go-service/id"
+	"github.com/alexfalkowski/go-service/os"
 	"github.com/alexfalkowski/go-service/telemetry/logger"
 	"github.com/alexfalkowski/go-service/telemetry/metrics"
 	"github.com/alexfalkowski/go-service/telemetry/tracer"
@@ -37,6 +38,7 @@ type ClientParams struct {
 	Endpoint  endpoint.Endpoint
 	Config    *conf.Config
 	Logger    *logger.Logger
+	FS        *os.FS
 	UserAgent env.UserAgent
 }
 
@@ -46,12 +48,12 @@ func NewClient(params ClientParams) (*s3.Client, error) {
 	config.WithRequestChecksumCalculation(0)
 	config.WithResponseChecksumValidation(0)
 
-	accessKeyID, err := params.Config.GetAccessKeyID()
+	accessKeyID, err := params.Config.GetAccessKeyID(params.FS)
 	if err != nil {
 		return nil, err
 	}
 
-	accessKeySecret, err := params.Config.GetAccessKeySecret()
+	accessKeySecret, err := params.Config.GetAccessKeySecret(params.FS)
 	if err != nil {
 		return nil, err
 	}

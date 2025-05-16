@@ -8,6 +8,6 @@ type Config struct {
 }
 
 // GetPath from config.
-func (c *Config) GetPath() string {
-	return os.CleanPath(c.Path)
+func (c *Config) GetPath(fs *os.FS) string {
+	return fs.CleanPath(c.Path)
 }
