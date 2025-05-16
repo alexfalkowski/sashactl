@@ -14,11 +14,11 @@ type Config struct {
 }
 
 // GetAccessKeyID for aws.
-func (c *Config) GetAccessKeyID() ([]byte, error) {
-	return os.ReadFile(c.AccessKeyID)
+func (c *Config) GetAccessKeyID(fs *os.FS) ([]byte, error) {
+	return fs.ReadFile(c.AccessKeyID)
 }
 
 // GetAccessKeySecret for aws.
-func (c *Config) GetAccessKeySecret() ([]byte, error) {
-	return os.ReadFile(c.AccessKeySecret)
+func (c *Config) GetAccessKeySecret(fs *os.FS) ([]byte, error) {
+	return fs.ReadFile(c.AccessKeySecret)
 }
