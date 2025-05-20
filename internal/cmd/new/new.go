@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/alexfalkowski/go-service/cmd"
+	"github.com/alexfalkowski/go-service/cmd/flag"
 	"github.com/alexfalkowski/go-service/encoding/yaml"
 	se "github.com/alexfalkowski/go-service/errors"
 	"github.com/alexfalkowski/go-service/feature"
@@ -34,7 +35,7 @@ type Params struct {
 
 	Lifecycle  fx.Lifecycle
 	Logger     *logger.Logger
-	FlagSet    *cmd.FlagSet
+	FlagSet    *flag.FlagSet
 	Config     *config.Config
 	Encoder    *yaml.Encoder
 	Repository repository.Repository
@@ -42,18 +43,20 @@ type Params struct {
 
 // New article to be created.
 func New(params Params) {
-	cmd.Start(params.Lifecycle, func(ctx context.Context) error {
-		name, _ := params.FlagSet.GetString("name")
-		if strings.IsEmpty(name) {
-			return errors.ErrNoName
-		}
+	params.Lifecycle.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			name, _ := params.FlagSet.GetString("name")
+			if strings.IsEmpty(name) {
+				return errors.ErrNoName
+			}
 
-		if err := params.Repository.NewArticle(ctx, name); err != nil {
-			return se.Prefix("new: create article", err)
-		}
+			if err := params.Repository.NewArticle(ctx, name); err != nil {
+				return se.Prefix("new: create article", err)
+			}
 
-		params.Logger.Info("created article", slog.String("name", name))
+			params.Logger.Info("created article", slog.String("name", name))
 
-		return nil
+			return nil
+		},
 	})
 }
