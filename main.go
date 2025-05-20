@@ -3,14 +3,14 @@ package main
 import (
 	"context"
 
-	"github.com/alexfalkowski/go-service/cmd"
+	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/sashactl/internal/cmd/delete"
 	"github.com/alexfalkowski/sashactl/internal/cmd/new"
 	"github.com/alexfalkowski/sashactl/internal/cmd/publish"
 	"github.com/alexfalkowski/sashactl/internal/cmd/unpublish"
 )
 
-var app = cmd.NewApplication(func(command *cmd.Command) {
+var app = cli.NewApplication(func(command cli.Commander) {
 	delete.Register(command)
 	new.Register(command)
 	publish.Register(command)

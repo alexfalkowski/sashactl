@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/alexfalkowski/go-service/client"
-	"github.com/alexfalkowski/go-service/os"
+	"github.com/alexfalkowski/go-service/v2/client"
+	"github.com/alexfalkowski/go-service/v2/os"
 )
 
 // Config for aws.

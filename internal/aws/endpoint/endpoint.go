@@ -1,7 +1,7 @@
 package endpoint
 
 import (
-	"github.com/alexfalkowski/go-service/strings"
+	"github.com/alexfalkowski/go-service/v2/strings"
 	aws "github.com/alexfalkowski/sashactl/internal/aws/config"
 )
 
