@@ -4,15 +4,15 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/alexfalkowski/go-service/cmd"
-	"github.com/alexfalkowski/go-service/cmd/flag"
-	"github.com/alexfalkowski/go-service/encoding/yaml"
-	se "github.com/alexfalkowski/go-service/errors"
-	"github.com/alexfalkowski/go-service/feature"
-	"github.com/alexfalkowski/go-service/module"
-	"github.com/alexfalkowski/go-service/strings"
-	"github.com/alexfalkowski/go-service/telemetry"
-	"github.com/alexfalkowski/go-service/telemetry/logger"
+	"github.com/alexfalkowski/go-service/v2/cli"
+	"github.com/alexfalkowski/go-service/v2/cli/flag"
+	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
+	se "github.com/alexfalkowski/go-service/v2/errors"
+	"github.com/alexfalkowski/go-service/v2/feature"
+	"github.com/alexfalkowski/go-service/v2/module"
+	"github.com/alexfalkowski/go-service/v2/strings"
+	"github.com/alexfalkowski/go-service/v2/telemetry"
+	"github.com/alexfalkowski/go-service/v2/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/cmd/errors"
 	"github.com/alexfalkowski/sashactl/internal/config"
@@ -20,13 +20,13 @@ import (
 )
 
 // Register for delete.
-func Register(command *cmd.Command) {
-	flags := command.AddClient("delete", "Delete a new article",
+func Register(command cli.Commander) {
+	cmd := command.AddClient("delete", "Delete a new article",
 		module.Module, feature.Module, telemetry.Module,
-		config.Module, Module, cmd.Module,
+		config.Module, Module, cli.Module,
 	)
-	flags.AddInput("")
-	flags.StringP("slug", "s", "", "slug of the article")
+	cmd.AddInput("")
+	cmd.StringP("slug", "s", "", "slug of the article")
 }
 
 // Params for delete.
