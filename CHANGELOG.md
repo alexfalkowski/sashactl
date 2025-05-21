@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.52.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.52.0) - 2025-05-21
+
+- [`485fcd4`](https://github.com/alexfalkowski/sashactl/commit/485fcd44abb7a763e2ef85234a8f2875c5fc7ee0) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.2.0 (#90)
+- [`e4e3955`](https://github.com/alexfalkowski/sashactl/commit/e4e3955e80e74e44cb4af11d16751f3bac8e910d) test(deps): bump rubocop from 1.75.6 to 1.75.7 in /test (#89)
+- [`8828aba`](https://github.com/alexfalkowski/sashactl/commit/8828aba45d450d1b6ba7390800f48712226112c5) build(deps): upgraded github.com/alexfalkowski/bin (#88)
+
 ## [v1.51.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.51.0) - 2025-05-20
 
 - [`2406d71`](https://github.com/alexfalkowski/sashactl/commit/2406d7112d057c2ef8aa06274b81e3d99a2c2ece) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.1.0 (#87)
