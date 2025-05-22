@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.53.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.53.0) - 2025-05-22
+
+- [`5d38828`](https://github.com/alexfalkowski/sashactl/commit/5d38828b13fd8fbe3e7f3a335959185714a9b2a0) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.3.0 (#94)
+- [`2f57e65`](https://github.com/alexfalkowski/sashactl/commit/2f57e651437c34600ac735059f23aaf1db3a4363) build(ci): use alexfalkowski/release:3.21 (#93)
+- [`0374772`](https://github.com/alexfalkowski/sashactl/commit/03747721f8e1b3abc4a14d0ca1ce14d2600764d6) build(deps): upgraded github.com/alexfalkowski/bin (#92)
+- [`10df555`](https://github.com/alexfalkowski/sashactl/commit/10df555a3683f1e41fde0a94bbda41a29f1b6594) build(deps): upgraded github.com/alexfalkowski/bin (#91)
+
 ## [v1.52.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.52.0) - 2025-05-21
 
 - [`485fcd4`](https://github.com/alexfalkowski/sashactl/commit/485fcd44abb7a763e2ef85234a8f2875c5fc7ee0) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.2.0 (#90)
