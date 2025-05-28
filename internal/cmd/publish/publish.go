@@ -7,11 +7,7 @@ import (
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/cli/flag"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
-	se "github.com/alexfalkowski/go-service/v2/errors"
-	"github.com/alexfalkowski/go-service/v2/feature"
-	"github.com/alexfalkowski/go-service/v2/module"
 	"github.com/alexfalkowski/go-service/v2/strings"
-	"github.com/alexfalkowski/go-service/v2/telemetry"
 	"github.com/alexfalkowski/go-service/v2/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/cmd/errors"
@@ -21,10 +17,7 @@ import (
 
 // Register for publish.
 func Register(command cli.Commander) {
-	cmd := command.AddClient("publish", "Publish the article",
-		module.Module, feature.Module, telemetry.Module,
-		config.Module, cli.Module, Module,
-	)
+	cmd := command.AddClient("publish", "Publish the article", Module)
 	cmd.AddInput("")
 	cmd.StringP("slug", "s", "", "slug of the article")
 }
@@ -51,7 +44,7 @@ func Publish(params Params) {
 			}
 
 			if err := params.Repository.PublishArticle(ctx, slug); err != nil {
-				return se.Prefix("publish: created article", err)
+				return errors.Prefix("publish: created article", err)
 			}
 
 			params.Logger.Info("published article", slog.String("slug", slug))

@@ -8,4 +8,7 @@ var (
 
 	// ErrNoSlug when we forget to pass a slug.
 	ErrNoSlug = errors.New("publish: no slug provided")
+
+	// Prefix is just an alias for errors.Prefix.
+	Prefix = errors.Prefix
 )
