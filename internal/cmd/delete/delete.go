@@ -7,11 +7,7 @@ import (
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/cli/flag"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
-	se "github.com/alexfalkowski/go-service/v2/errors"
-	"github.com/alexfalkowski/go-service/v2/feature"
-	"github.com/alexfalkowski/go-service/v2/module"
 	"github.com/alexfalkowski/go-service/v2/strings"
-	"github.com/alexfalkowski/go-service/v2/telemetry"
 	"github.com/alexfalkowski/go-service/v2/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/cmd/errors"
@@ -21,10 +17,8 @@ import (
 
 // Register for delete.
 func Register(command cli.Commander) {
-	cmd := command.AddClient("delete", "Delete a new article",
-		module.Module, feature.Module, telemetry.Module,
-		config.Module, cli.Module, Module,
-	)
+	cmd := command.AddClient("delete", "Delete a new article", Module)
+
 	cmd.AddInput("")
 	cmd.StringP("slug", "s", "", "slug of the article")
 }
@@ -47,11 +41,11 @@ func Delete(params Params) {
 		OnStart: func(ctx context.Context) error {
 			slug, _ := params.FlagSet.GetString("slug")
 			if strings.IsEmpty(slug) {
-				return errors.ErrNoSlug
+				return errors.Prefix("delete", errors.ErrNoSlug)
 			}
 
 			if err := params.Repository.DeleteArticle(ctx, slug); err != nil {
-				return se.Prefix("delete: created article", err)
+				return errors.Prefix("delete: created article", err)
 			}
 
 			params.Logger.Info("deleted article", slog.String("slug", slug))
