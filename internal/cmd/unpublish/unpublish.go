@@ -7,11 +7,7 @@ import (
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/cli/flag"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
-	se "github.com/alexfalkowski/go-service/v2/errors"
-	"github.com/alexfalkowski/go-service/v2/feature"
-	"github.com/alexfalkowski/go-service/v2/module"
 	"github.com/alexfalkowski/go-service/v2/strings"
-	"github.com/alexfalkowski/go-service/v2/telemetry"
 	"github.com/alexfalkowski/go-service/v2/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/cmd/errors"
@@ -21,10 +17,8 @@ import (
 
 // Register for unpublish.
 func Register(command cli.Commander) {
-	cmd := command.AddClient("unpublish", "Unpublish an article",
-		module.Module, feature.Module, telemetry.Module,
-		config.Module, cli.Module, Module,
-	)
+	cmd := command.AddClient("unpublish", "Unpublish an article", Module)
+
 	cmd.AddInput("")
 	cmd.StringP("slug", "s", "", "slug of the article")
 }
@@ -47,11 +41,11 @@ func Unpublish(params Params) {
 		OnStart: func(ctx context.Context) error {
 			slug, _ := params.FlagSet.GetString("slug")
 			if strings.IsEmpty(slug) {
-				return errors.ErrNoSlug
+				return errors.Prefix("unpublish", errors.ErrNoSlug)
 			}
 
 			if err := params.Repository.UnpublishArticle(ctx, slug); err != nil {
-				return se.Prefix("unpublish: existing article", err)
+				return errors.Prefix("unpublish: existing article", err)
 			}
 
 			params.Logger.Info("unpublished article", slog.String("slug", slug))
