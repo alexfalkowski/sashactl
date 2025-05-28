@@ -23,7 +23,7 @@ import (
 func Register(command cli.Commander) {
 	cmd := command.AddClient("new", "Create a new article",
 		module.Module, feature.Module, telemetry.Module,
-		config.Module, Module, cli.Module,
+		config.Module, cli.Module, Module,
 	)
 	cmd.AddInput("")
 	cmd.StringP("name", "n", "", "name of the article")
