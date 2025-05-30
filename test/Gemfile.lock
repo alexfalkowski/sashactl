@@ -63,10 +63,10 @@ GEM
     get_process_mem (1.0.0)
       bigdecimal (>= 2.0)
       ffi (~> 1.0)
-    google-protobuf (4.31.0-x86_64-darwin)
+    google-protobuf (4.31.1-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-x86_64-linux-gnu)
+    google-protobuf (4.31.1-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.20.0)
@@ -130,7 +130,7 @@ GEM
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rainbow (3.1.1)
-    rake (13.2.1)
+    rake (13.3.0)
     rbs (3.9.4)
       logger
     regexp_parser (2.10.0)
