@@ -5,8 +5,8 @@ import (
 	"log/slog"
 
 	"github.com/alexfalkowski/go-service/v2/cli"
-	"github.com/alexfalkowski/go-service/v2/cli/flag"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
+	"github.com/alexfalkowski/go-service/v2/flag"
 	"github.com/alexfalkowski/go-service/v2/strings"
 	"github.com/alexfalkowski/go-service/v2/telemetry/logger"
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
