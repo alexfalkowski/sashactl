@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.74.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.74.0) - 2025-06-03
+
+- [`08b2da9`](https://github.com/alexfalkowski/sashactl/commit/08b2da92e5b9eb86e7af49ff97b9c03d86359c91) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.28.0 (#132)
+- [`78d64c4`](https://github.com/alexfalkowski/sashactl/commit/78d64c4bfe6c8cbf162eeff8a22e4b0b201ecf81) test(deps): bump aws-sdk-s3 from 1.188.0 to 1.189.0 in /test (#130)
+- [`cd31fba`](https://github.com/alexfalkowski/sashactl/commit/cd31fba100f5210e51588bbc12940fe42207b9bb) test(deps): bump ruby-lsp from 0.23.23 to 0.23.24 in /test (#131)
+- [`0e87dcc`](https://github.com/alexfalkowski/sashactl/commit/0e87dcc82c926cf4c4da21aa5fc0a77aa1c83594) build(ci): use alexfalkowski/go:2.24 (#129)
+- [`b2f0db8`](https://github.com/alexfalkowski/sashactl/commit/b2f0db8f57e6ac37832d1449e974bc946ad0909d) build(deps): upgraded github.com/alexfalkowski/bin (#128)
+
 ## [v1.73.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.73.0) - 2025-06-01
 
 - [`0bc6c21`](https://github.com/alexfalkowski/sashactl/commit/0bc6c210ac5e7e13448cb4bdbf2449fcc0c754c8) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.26.0 (#127)
