@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.101.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.101.0) - 2025-06-09
+
+- [`548079d`](https://github.com/alexfalkowski/sashactl/commit/548079dd49a5284cf865c7c46815bf5f879190ad) feat(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.29.14 to 1.29.15 (#163)
+- [`e9dac16`](https://github.com/alexfalkowski/sashactl/commit/e9dac1667757dd2c76ce06419b994e03b774f65e) build(deps): upgraded github.com/alexfalkowski/bin (#159)
+
 ## [v1.100.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.100.0) - 2025-06-09
 
 - [`aef82ee`](https://github.com/alexfalkowski/sashactl/commit/aef82ee50b8f33008df80ea9de9ede0b65144539) feat(deps): upgraded github.com/alexfalkowski/go-service/v2 to v2.60.0 (#158)
