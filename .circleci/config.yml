@@ -105,11 +105,13 @@ workflows:
       - build-client
       - build-docker:
           context: gh
+          filters:
+            branches:
+              ignore: master
       - release:
           context: gh
           requires:
             - build-client
-            - build-docker
           filters:
             branches:
               only: master
