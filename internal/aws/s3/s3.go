@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/alexfalkowski/go-service/v2/bytes"
+	"github.com/alexfalkowski/go-service/v2/di"
 	"github.com/alexfalkowski/go-service/v2/env"
 	"github.com/alexfalkowski/go-service/v2/errors"
 	"github.com/alexfalkowski/go-service/v2/id"
@@ -19,7 +20,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"go.uber.org/fx"
 )
 
 // IsNotFound for s3.
@@ -31,7 +31,8 @@ func IsNotFound(err error) bool {
 
 // ConfigParams for s3.
 type ClientParams struct {
-	fx.In
+	di.In
+
 	Tracer    *tracer.Tracer
 	Meter     *metrics.Meter
 	ID        id.Generator

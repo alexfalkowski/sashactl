@@ -1,13 +1,13 @@
 package aws
 
 import (
+	"github.com/alexfalkowski/go-service/v2/di"
 	aws "github.com/alexfalkowski/sashactl/internal/aws/endpoint"
 	"github.com/alexfalkowski/sashactl/internal/aws/s3"
-	"go.uber.org/fx"
 )
 
 // Module for fx.
-var Module = fx.Options(
-	fx.Provide(aws.NewEndpoint),
-	fx.Provide(s3.NewClient),
+var Module = di.Module(
+	di.Constructor(aws.NewEndpoint),
+	di.Constructor(s3.NewClient),
 )

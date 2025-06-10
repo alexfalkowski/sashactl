@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/alexfalkowski/go-service/v2/cli"
+	"github.com/alexfalkowski/go-service/v2/di"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
 	"github.com/alexfalkowski/go-service/v2/flag"
 	"github.com/alexfalkowski/go-service/v2/strings"
@@ -12,7 +13,6 @@ import (
 	"github.com/alexfalkowski/sashactl/internal/articles/repository"
 	"github.com/alexfalkowski/sashactl/internal/cmd/errors"
 	"github.com/alexfalkowski/sashactl/internal/config"
-	"go.uber.org/fx"
 )
 
 // Register for unpublish.
@@ -25,9 +25,9 @@ func Register(command cli.Commander) {
 
 // Params for unpublish.
 type Params struct {
-	fx.In
+	di.In
 
-	Lifecycle  fx.Lifecycle
+	Lifecycle  di.Lifecycle
 	Logger     *logger.Logger
 	FlagSet    *flag.FlagSet
 	Config     *config.Config
@@ -37,7 +37,7 @@ type Params struct {
 
 // Unpublish a article.
 func Unpublish(params Params) {
-	params.Lifecycle.Append(fx.Hook{
+	params.Lifecycle.Append(di.Hook{
 		OnStart: func(ctx context.Context) error {
 			slug, _ := params.FlagSet.GetString("slug")
 			if strings.IsEmpty(slug) {

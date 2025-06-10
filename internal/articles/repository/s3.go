@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"slices"
 
+	"github.com/alexfalkowski/go-service/v2/di"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
 	"github.com/alexfalkowski/go-service/v2/errors"
 	"github.com/alexfalkowski/go-service/v2/id"
@@ -20,14 +21,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gosimple/slug"
-	"go.uber.org/fx"
 )
 
 var bucket = aws.String("articles")
 
 // Params for articles.
 type Params struct {
-	fx.In
+	di.In
 
 	Config    *config.Config
 	Encoder   *yaml.Encoder
