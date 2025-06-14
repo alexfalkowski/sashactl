@@ -3,7 +3,7 @@ GEM
   specs:
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1115.0)
+    aws-partitions (1.1116.0)
     aws-sdk-core (3.225.2)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -11,7 +11,7 @@ GEM
       base64
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.104.0)
+    aws-sdk-kms (1.105.0)
       aws-sdk-core (~> 3, >= 3.225.0)
       aws-sigv4 (~> 1.5)
     aws-sdk-s3 (1.189.1)
@@ -51,7 +51,7 @@ GEM
       bigdecimal
     cucumber-gherkin (27.0.0)
       cucumber-messages (>= 19.1.4, < 23)
-    cucumber-html-formatter (21.9.0)
+    cucumber-html-formatter (21.10.1)
       cucumber-messages (> 19, < 28)
     cucumber-messages (22.0.0)
     cucumber-tag-expressions (6.1.2)
@@ -88,7 +88,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0603)
+    mime-types-data (3.2025.0610)
     mini_mime (1.1.5)
     multi_test (1.1.0)
     mustermann (3.0.3)
@@ -188,7 +188,7 @@ GEM
       rack-protection (= 4.1.1)
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
-    sorbet-runtime (0.5.12164)
+    sorbet-runtime (0.5.12176)
     sys-uname (1.3.1)
       ffi (~> 1.1)
     tilt (2.6.0)
