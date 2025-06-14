@@ -3,7 +3,7 @@ module github.com/alexfalkowski/sashactl
 go 1.24.0
 
 require (
-	github.com/alexfalkowski/go-service/v2 v2.67.0
+	github.com/alexfalkowski/go-service/v2 v2.68.0
 	github.com/aws/aws-sdk-go-v2 v1.36.4
 	github.com/aws/aws-sdk-go-v2/config v1.29.16
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.69
@@ -17,7 +17,7 @@ require (
 	dario.cat/mergo v1.0.2 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
-	github.com/KimMachineGun/automemlimit v0.7.2 // indirect
+	github.com/KimMachineGun/automemlimit v0.7.3 // indirect
 	github.com/aead/cmac v0.0.0-20160719120800-7af84192f0b1 // indirect
 	github.com/alexfalkowski/go-health v1.23.0 // indirect
 	github.com/arl/statsviz v0.6.0 // indirect
