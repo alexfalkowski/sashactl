@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.117.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.117.0) - 2025-06-18
+
+- [`3264990`](https://github.com/alexfalkowski/sashactl/commit/326499022a3cb294354655a288c46d3ff166c499) feat(deps): bump github.com/aws/aws-sdk-go-v2/service/s3 from 1.80.2 to 1.80.3 (#190)
+
 ## [v1.116.0](https://github.com/alexfalkowski/sashactl/releases/tag/v1.116.0) - 2025-06-18
 
 - [`25b0190`](https://github.com/alexfalkowski/sashactl/commit/25b0190fe31b444a58c79cdb970e90dfbb8aead6) feat(deps): bump github.com/aws/aws-sdk-go-v2/config from 1.29.16 to 1.29.17 (#187)
