@@ -13,7 +13,8 @@ import (
 	"github.com/alexfalkowski/go-service/v2/telemetry/metrics"
 	"github.com/alexfalkowski/go-service/v2/telemetry/tracer"
 	"github.com/alexfalkowski/go-service/v2/transport/http"
-	conf "github.com/alexfalkowski/sashactl/internal/aws/config"
+	"github.com/alexfalkowski/go-service/v2/transport/http/limiter"
+	ac "github.com/alexfalkowski/sashactl/internal/aws/config"
 	"github.com/alexfalkowski/sashactl/internal/aws/endpoint"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -37,9 +38,10 @@ type ClientParams struct {
 	Meter     *metrics.Meter
 	ID        id.Generator
 	Endpoint  endpoint.Endpoint
-	Config    *conf.Config
+	Config    *ac.Config
 	Logger    *logger.Logger
 	FS        *os.FS
+	Limiter   *limiter.Limiter
 	UserAgent env.UserAgent
 }
 
@@ -63,6 +65,7 @@ func NewClient(params ClientParams) (*s3.Client, error) {
 		http.WithClientLogger(params.Logger), http.WithClientTracer(params.Tracer),
 		http.WithClientMetrics(params.Meter), http.WithClientUserAgent(params.UserAgent),
 		http.WithClientTimeout(params.Config.Timeout), http.WithClientID(params.ID),
+		http.WithClientLimiter(params.Limiter),
 	)
 
 	opts := []func(*config.LoadOptions) error{
