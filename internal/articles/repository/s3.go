@@ -14,7 +14,6 @@ import (
 	"github.com/alexfalkowski/go-service/v2/mime"
 	"github.com/alexfalkowski/go-service/v2/os"
 	"github.com/alexfalkowski/go-service/v2/runtime"
-	tm "github.com/alexfalkowski/go-service/v2/transport/meta"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
 	as3 "github.com/alexfalkowski/sashactl/internal/aws/s3"
@@ -64,7 +63,7 @@ func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err erro
 		}
 	}()
 
-	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articles := r.articles(ctx)
 	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
@@ -85,7 +84,7 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 		}
 	}()
 
-	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articles := r.articles(ctx)
 	slug := slug.Make(name)
 	articlesPath, articlesConfig := r.configPath()
@@ -132,7 +131,7 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) (err err
 		}
 	}()
 
-	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 
 	articlesPath, articlesConfig := r.configPath()
 	r.uploadConfig(ctx, articlesConfig)
@@ -154,7 +153,7 @@ func (r *S3Repository) UnpublishArticle(ctx context.Context, slug string) (err e
 		}
 	}()
 
-	ctx = tm.WithRequestID(ctx, meta.String(r.generator.Generate()))
+	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articles := r.articles(ctx)
 	articlesPath, articlesConfig := r.configPath()
 	articlePath := filepath.Join(articlesPath, slug)
