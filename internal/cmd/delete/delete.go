@@ -1,8 +1,6 @@
 package delete
 
 import (
-	"log/slog"
-
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/context"
 	"github.com/alexfalkowski/go-service/v2/di"
@@ -48,7 +46,7 @@ func Delete(params Params) {
 				return errors.Prefix("delete: created article", err)
 			}
 
-			params.Logger.Info("deleted article", slog.String("slug", slug))
+			params.Logger.Info("deleted article", logger.String("slug", slug))
 
 			return nil
 		},

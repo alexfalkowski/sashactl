@@ -1,8 +1,6 @@
 package publish
 
 import (
-	"log/slog"
-
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/context"
 	"github.com/alexfalkowski/go-service/v2/di"
@@ -48,7 +46,7 @@ func Publish(params Params) {
 				return errors.Prefix("publish: created article", err)
 			}
 
-			params.Logger.Info("published article", slog.String("slug", slug))
+			params.Logger.Info("published article", logger.String("slug", slug))
 
 			return nil
 		},

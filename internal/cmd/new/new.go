@@ -1,8 +1,6 @@
 package new
 
 import (
-	"log/slog"
-
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/context"
 	"github.com/alexfalkowski/go-service/v2/di"
@@ -48,7 +46,7 @@ func New(params Params) {
 				return errors.Prefix("new: create article", err)
 			}
 
-			params.Logger.Info("created article", slog.String("name", name))
+			params.Logger.Info("created article", logger.String("name", name))
 
 			return nil
 		},

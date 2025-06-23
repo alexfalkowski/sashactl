@@ -22,6 +22,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
 
+type (
+	// Client is an alias for s3.Client.
+	Client = s3.Client
+
+	// DeleteObjectInput is an alias for s3.DeleteObjectInput.
+	DeleteObjectInput = s3.DeleteObjectInput
+
+	// GetObjectInput is an alias for s3.GetObjectInput.
+	GetObjectInput = s3.GetObjectInput
+
+	// PutObjectInput is an alias for s3.PutObjectInput.
+	PutObjectInput = s3.PutObjectInput
+)
+
 // IsNotFound for s3.
 func IsNotFound(err error) bool {
 	var noKeyErr *types.NoSuchKey
@@ -45,7 +59,7 @@ type ClientParams struct {
 }
 
 // NewClient for s3.
-func NewClient(params ClientParams) (*s3.Client, error) {
+func NewClient(params ClientParams) (*Client, error) {
 	// As recommended by https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/.
 	config.WithRequestChecksumCalculation(0)
 	config.WithResponseChecksumValidation(0)
@@ -81,7 +95,7 @@ func NewClient(params ClientParams) (*s3.Client, error) {
 	}
 
 	cfg, err := config.LoadDefaultConfig(context.Background(), opts...)
-	s3Client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
 		o.UsePathStyle = true
 
 		if params.Endpoint.IsSet() {
@@ -89,5 +103,5 @@ func NewClient(params ClientParams) (*s3.Client, error) {
 		}
 	})
 
-	return s3Client, err
+	return client, err
 }

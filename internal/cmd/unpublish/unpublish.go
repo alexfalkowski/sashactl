@@ -1,8 +1,6 @@
 package unpublish
 
 import (
-	"log/slog"
-
 	"github.com/alexfalkowski/go-service/v2/cli"
 	"github.com/alexfalkowski/go-service/v2/context"
 	"github.com/alexfalkowski/go-service/v2/di"
@@ -48,7 +46,7 @@ func Unpublish(params Params) {
 				return errors.Prefix("unpublish: existing article", err)
 			}
 
-			params.Logger.Info("unpublished article", slog.String("slug", slug))
+			params.Logger.Info("unpublished article", logger.String("slug", slug))
 
 			return nil
 		},
