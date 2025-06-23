@@ -3,7 +3,7 @@ module github.com/alexfalkowski/sashactl
 go 1.24.0
 
 require (
-	github.com/alexfalkowski/go-service/v2 v2.77.0
+	github.com/alexfalkowski/go-service/v2 v2.78.0
 	github.com/aws/aws-sdk-go-v2 v1.36.5
 	github.com/aws/aws-sdk-go-v2/config v1.29.17
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.70

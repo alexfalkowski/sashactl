@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"context"
 	"io"
 	"path/filepath"
 	"slices"
 
+	"github.com/alexfalkowski/go-service/v2/context"
 	"github.com/alexfalkowski/go-service/v2/di"
 	"github.com/alexfalkowski/go-service/v2/encoding/yaml"
 	"github.com/alexfalkowski/go-service/v2/errors"

@@ -1,6 +1,6 @@
 package repository
 
-import "context"
+import "github.com/alexfalkowski/go-service/v2/context"
 
 // Repository for articles.
 type Repository interface {
