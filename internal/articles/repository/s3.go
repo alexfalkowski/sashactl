@@ -2,7 +2,6 @@ package repository
 
 import (
 	"io"
-	"io/fs"
 	"slices"
 
 	"github.com/alexfalkowski/go-service/v2/context"
@@ -14,15 +13,14 @@ import (
 	"github.com/alexfalkowski/go-service/v2/mime"
 	"github.com/alexfalkowski/go-service/v2/os"
 	"github.com/alexfalkowski/go-service/v2/runtime"
+	"github.com/alexfalkowski/go-service/v2/types/ptr"
 	"github.com/alexfalkowski/sashactl/internal/articles/config"
 	"github.com/alexfalkowski/sashactl/internal/articles/model"
-	as3 "github.com/alexfalkowski/sashactl/internal/aws/s3"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/alexfalkowski/sashactl/internal/aws/s3"
 	"github.com/gosimple/slug"
 )
 
-var bucket = aws.String("articles")
+var bucket = ptr.Value("articles")
 
 // Params for articles.
 type Params struct {
@@ -181,7 +179,7 @@ func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) {
 }
 
 func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) {
-	_ = r.fs.WalkDir(path, func(path string, info fs.DirEntry, err error) error {
+	_ = r.fs.WalkDir(path, func(path string, info os.DirEntry, err error) error {
 		runtime.Must(err)
 
 		if info.IsDir() {
@@ -209,7 +207,7 @@ func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, arti
 }
 
 func (r *S3Repository) delete(ctx context.Context, base, path string) {
-	_ = r.fs.WalkDir(path, func(path string, info fs.DirEntry, err error) error {
+	_ = r.fs.WalkDir(path, func(path string, info os.DirEntry, err error) error {
 		runtime.Must(err)
 
 		if info.IsDir() {
@@ -221,7 +219,7 @@ func (r *S3Repository) delete(ctx context.Context, base, path string) {
 
 		input := &s3.DeleteObjectInput{
 			Bucket: bucket,
-			Key:    aws.String(rel),
+			Key:    ptr.Value(rel),
 		}
 
 		_, err = r.s3.DeleteObject(ctx, input)
@@ -239,9 +237,9 @@ func (r *S3Repository) put(ctx context.Context, path, contentType, body string) 
 
 	input := &s3.PutObjectInput{
 		Bucket:      bucket,
-		Key:         aws.String(path),
+		Key:         ptr.Value(path),
 		Body:        file,
-		ContentType: aws.String(contentType),
+		ContentType: ptr.Value(contentType),
 	}
 
 	_, err = r.s3.PutObject(ctx, input)
@@ -252,12 +250,12 @@ func (r *S3Repository) articles(ctx context.Context) *model.Articles {
 	site := &model.Articles{}
 	input := &s3.GetObjectInput{
 		Bucket: bucket,
-		Key:    aws.String("articles.yml"),
+		Key:    ptr.Value("articles.yml"),
 	}
 
 	out, err := r.s3.GetObject(ctx, input)
 	if err != nil {
-		if as3.IsNotFound(err) {
+		if s3.IsNotFound(err) {
 			return site
 		}
 
