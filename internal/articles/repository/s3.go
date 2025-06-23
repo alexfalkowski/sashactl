@@ -2,7 +2,7 @@ package repository
 
 import (
 	"io"
-	"path/filepath"
+	"io/fs"
 	"slices"
 
 	"github.com/alexfalkowski/go-service/v2/context"
@@ -66,7 +66,7 @@ func (r *S3Repository) DeleteArticle(ctx context.Context, slug string) (err erro
 	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articles := r.articles(ctx)
 	articlesPath, articlesConfig := r.configPath()
-	articlePath := filepath.Join(articlesPath, slug)
+	articlePath := r.fs.Join(articlesPath, slug)
 
 	err = r.fs.RemoveAll(articlePath)
 	runtime.Must(err)
@@ -88,10 +88,10 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 	articles := r.articles(ctx)
 	slug := slug.Make(name)
 	articlesPath, articlesConfig := r.configPath()
-	articlePath := filepath.Join(articlesPath, slug)
-	articleConfigPath := filepath.Join(articlePath, "article.yml")
+	articlePath := r.fs.Join(articlesPath, slug)
+	articleConfigPath := r.fs.Join(articlePath, "article.yml")
 
-	err = r.fs.MkdirAll(filepath.Join(articlePath, "images"), 0o777)
+	err = r.fs.MkdirAll(r.fs.Join(articlePath, "images"), 0o777)
 	runtime.Must(err)
 
 	article := &model.Article{Name: name, Slug: slug}
@@ -113,7 +113,7 @@ func (r *S3Repository) NewArticle(ctx context.Context, name string) (err error) 
 	err = r.encoder.Encode(articleConfigFile, article)
 	runtime.Must(err)
 
-	articleBodyPath := filepath.Join(articlePath, "article.md")
+	articleBodyPath := r.fs.Join(articlePath, "article.md")
 
 	articleBodyFile, err := r.fs.Create(articleBodyPath)
 	runtime.Must(err)
@@ -136,10 +136,10 @@ func (r *S3Repository) PublishArticle(ctx context.Context, slug string) (err err
 	articlesPath, articlesConfig := r.configPath()
 	r.uploadConfig(ctx, articlesConfig)
 
-	articlePath := filepath.Join(articlesPath, slug)
+	articlePath := r.fs.Join(articlesPath, slug)
 	r.uploadArticle(ctx, slug, articlePath)
 
-	imagesPath := filepath.Join(articlePath, "images")
+	imagesPath := r.fs.Join(articlePath, "images")
 	r.uploadImages(ctx, slug, imagesPath)
 
 	return nil
@@ -156,7 +156,7 @@ func (r *S3Repository) UnpublishArticle(ctx context.Context, slug string) (err e
 	ctx = meta.WithRequestID(ctx, meta.String(r.generator.Generate()))
 	articles := r.articles(ctx)
 	articlesPath, articlesConfig := r.configPath()
-	articlePath := filepath.Join(articlesPath, slug)
+	articlePath := r.fs.Join(articlesPath, slug)
 
 	r.delete(ctx, articlesPath, articlePath)
 
@@ -173,22 +173,22 @@ func (r *S3Repository) uploadConfig(ctx context.Context, path string) {
 }
 
 func (r *S3Repository) uploadArticle(ctx context.Context, slug, path string) {
-	configPath := filepath.Join(path, "article.yml")
-	r.put(ctx, filepath.Join(slug, "article.yml"), mime.YAMLMediaType, configPath)
+	configPath := r.fs.Join(path, "article.yml")
+	r.put(ctx, r.fs.Join(slug, "article.yml"), mime.YAMLMediaType, configPath)
 
-	bodyPath := filepath.Join(path, "article.md")
-	r.put(ctx, filepath.Join(slug, "article.md"), mime.MarkdownMediaType, bodyPath)
+	bodyPath := r.fs.Join(path, "article.md")
+	r.put(ctx, r.fs.Join(slug, "article.md"), mime.MarkdownMediaType, bodyPath)
 }
 
 func (r *S3Repository) uploadImages(ctx context.Context, slug, path string) {
-	_ = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	_ = r.fs.WalkDir(path, func(path string, info fs.DirEntry, err error) error {
 		runtime.Must(err)
 
 		if info.IsDir() {
 			return nil
 		}
 
-		r.put(ctx, filepath.Join(slug, "images", filepath.Base(path)), mime.JPEGMediaType, path)
+		r.put(ctx, r.fs.Join(slug, "images", r.fs.Base(path)), mime.JPEGMediaType, path)
 
 		return nil
 	})
@@ -209,14 +209,14 @@ func (r *S3Repository) deleteConfig(ctx context.Context, slug, path string, arti
 }
 
 func (r *S3Repository) delete(ctx context.Context, base, path string) {
-	_ = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	_ = r.fs.WalkDir(path, func(path string, info fs.DirEntry, err error) error {
 		runtime.Must(err)
 
 		if info.IsDir() {
 			return nil
 		}
 
-		rel, err := filepath.Rel(base, path)
+		rel, err := r.fs.Rel(base, path)
 		runtime.Must(err)
 
 		input := &s3.DeleteObjectInput{
@@ -278,8 +278,8 @@ func (r *S3Repository) close(closer io.Closer) {
 }
 
 func (r *S3Repository) configPath() (string, string) {
-	articlesPath := filepath.Join(r.config.GetPath(r.fs), "articles")
-	articlesConfig := filepath.Join(articlesPath, "articles.yml")
+	articlesPath := r.fs.Join(r.config.GetPath(r.fs), "articles")
+	articlesConfig := r.fs.Join(articlesPath, "articles.yml")
 
 	return articlesPath, articlesConfig
 }
